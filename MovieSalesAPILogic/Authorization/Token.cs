@@ -12,19 +12,20 @@ namespace MovieSalesAPILogic.Authorization
     {
         private readonly IConfiguration _configuration;
 
-        public Token(IConfiguration configuration) {
+        public Token(IConfiguration configuration)
+        {
             _configuration = configuration;
         }
 
         public bool Authorize(TokenRequest request)
         {
-            if (request.Username == "Username" && request.Password == "Password")
+            if (request.Username == _configuration["JWTUsername"] && request.Password == _configuration["JWTPassword"])
             {
                 return true;
             }
             return false;
         }
-    
+
         public string CreateToken(TokenRequest request)
         {
             //The username and password would be pulled either from a secure server
