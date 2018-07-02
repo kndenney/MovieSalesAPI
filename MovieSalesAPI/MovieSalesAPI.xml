@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>MovieSalesAPI</name>
+    </assembly>
+    <members>
+        <member name="M:MovieSalesAPI.Controllers.ValuesController.Get">
+            <summary>
+            Retrieve all movies
+            </summary>
+            <returns>Action result of list of values</returns>
+        </member>
+        <member name="M:MovieSalesAPI.Controllers.ValuesController.Get(System.Int32)">
+            <summary>
+            Retrieve specific movie.
+            </summary>
+            <param name="id">Movie ID</param>
+            <returns>Movie</returns>
+        </member>
+    </members>
+</doc>
