@@ -39,9 +39,12 @@ namespace MovieSalesAPI.Controllers
         /// 
         /// </summary>
         /// <param name="value"></param>
+        [Route("create/token")]
         [HttpPost]
-        public void Post([FromBody] string value)
+        public void CreateToken([FromBody] string value)
         {
+
+
         }
 
         // PUT: api/Authorize/5
