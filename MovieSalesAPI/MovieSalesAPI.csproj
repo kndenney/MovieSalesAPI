@@ -23,6 +23,10 @@
     <PackageReference Include="NSwag.AspNetCore" Version="11.17.17" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="2.5.0" />
   </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\MovieSalesAPILogic\MovieSalesAPILogic.csproj" />
+  </ItemGroup>
 
 
 </Project>
