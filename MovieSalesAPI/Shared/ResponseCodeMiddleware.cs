@@ -70,9 +70,9 @@ namespace MovieSalesAPI.Shared
                         addComma = ",";
                     }
 
-                    string json = "\"message\": [" + JsonConvert.SerializeObject(
+                   string json = "\"message\": [" + JsonConvert.SerializeObject(
                         new Error()
-                        {
+                        {   
                             Code = statusCode.ToString(),
                             Message = message.ToString(),
                             Path = httpContext.Request.Path.ToString() + httpContext.Request.QueryString

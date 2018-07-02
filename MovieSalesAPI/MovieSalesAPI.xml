@@ -4,6 +4,17 @@
         <name>MovieSalesAPI</name>
     </assembly>
     <members>
+        <member name="T:MovieSalesAPI.Controllers.AuthorizeController">
+            <summary>
+            Authenticate and authorize users to the movies API and data.
+            </summary>
+        </member>
+        <member name="M:MovieSalesAPI.Controllers.AuthorizeController.CreateToken(MovieSalesAPILogic.TokenRequest)">
+            <summary>
+            
+            </summary>
+            <param name="request">Token Request posted in the form of Username and Password</param>
+        </member>
         <member name="M:MovieSalesAPI.Controllers.ValuesController.Get">
             <summary>
             Retrieve all movies
