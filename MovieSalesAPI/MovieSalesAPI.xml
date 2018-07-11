@@ -40,5 +40,10 @@
             <param name="id">Movie ID</param>
             <returns>Movie</returns>
         </member>
+        <member name="T:MovieSalesAPI.Movie">
+            <summary>
+            Model class for movie details
+            </summary>
+        </member>
     </members>
 </doc>

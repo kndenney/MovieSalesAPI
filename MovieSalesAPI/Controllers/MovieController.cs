@@ -20,12 +20,20 @@ namespace MovieSalesAPI.Controllers
         /// <returns>Returns a list of movie details.</returns>
         [Authorize(Policy = "APIMovieAccess")]
         [HttpGet]
-        public IEnumerable<string> GetAllMovieDetails()
+        public List<Movie> GetAllMovieDetails()
         {
             //Access the Claim.Name value
             //var userName = User.Identity.Name;
+            List<Movie> movies = new List<Movie>
+            {
+                new Movie
+                {
+                    Name = "Test",
+                    Description = "Test"
+                }
+            };
 
-            return new string[] { "value1", "value2" };
+            return movies;
         }
 
         // GET: api/Movie/5
