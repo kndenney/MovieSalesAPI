@@ -21,7 +21,18 @@
             </summary>
             <param name="request">Token Request posted in the form of Username and Password</param>
         </member>
-        <member name="M:MovieSalesAPI.Controllers.MovieController.GetAllMovieDetails">
+        <member name="T:MovieSalesAPI.Controllers.MovieController">
+            <summary>
+            Retrieve and interact with movie data.
+            </summary>
+        </member>
+        <member name="M:MovieSalesAPI.Controllers.MovieController.#ctor(MovieSalesAPI.Data.IMovieData)">
+            <summary>
+            Class Declaration
+            </summary>
+            <param name="movieData"></param>
+        </member>
+        <member name="M:MovieSalesAPI.Controllers.MovieController.GetAllMovieDetails(System.String)">
             <summary>
             Retrieve all movie details
             </summary>
@@ -44,6 +55,13 @@
             <summary>
             Model class for movie details
             </summary>
+        </member>
+        <member name="M:MovieSalesAPI.Data.MovieData.RetrieveAllMovies(System.String)">
+            <summary>
+            Retrieve all the users movies
+            </summary>
+            <param name="username"></param>
+            <returns>Return a list of all movies for the user.</returns>
         </member>
     </members>
 </doc>

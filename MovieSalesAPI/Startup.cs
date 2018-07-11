@@ -20,6 +20,7 @@ using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using MovieSalesAPI.Data;
 
 namespace MovieSalesAPI
 {
@@ -149,6 +150,10 @@ namespace MovieSalesAPI
             });*/
 
             services.AddSwaggerDocumentation();
+
+
+            //Add dependency injection for Data classes, models etc.
+            services.AddTransient<IMovieData, MovieData>();
 
             services.AddMvc(config =>
             {

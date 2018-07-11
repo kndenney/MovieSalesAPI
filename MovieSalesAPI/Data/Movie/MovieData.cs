@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace MovieSalesAPI.Data
 {
 
-    public class MovieData
+    public class MovieData : IMovieData
     {
         private IMemoryCache _memoryCache;
         private string CacheName;
@@ -70,5 +70,12 @@ namespace MovieSalesAPI.Data
                 return results.ToList();
             }
         }
+    }
+
+    public interface IMovieData
+    {
+        List<Movie> RetrieveAllMovies(
+             string username
+         );
     }
 }
