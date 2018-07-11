@@ -9,11 +9,23 @@
             Authenticate and authorize users to the movies API and data.
             </summary>
         </member>
+        <member name="M:MovieSalesAPI.Controllers.AuthorizeController.#ctor(Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            Controller that authorizes a JWT token for users
+            </summary>
+            <param name="configuration"></param>
+        </member>
         <member name="M:MovieSalesAPI.Controllers.AuthorizeController.CreateToken(MovieSalesAPILogic.TokenRequest)">
             <summary>
             
             </summary>
             <param name="request">Token Request posted in the form of Username and Password</param>
+        </member>
+        <member name="M:MovieSalesAPI.Controllers.MovieController.GetAllMovieDetails">
+            <summary>
+            Retrieve all movie details
+            </summary>
+            <returns>Returns a list of movie details.</returns>
         </member>
         <member name="M:MovieSalesAPI.Controllers.ValuesController.Get">
             <summary>

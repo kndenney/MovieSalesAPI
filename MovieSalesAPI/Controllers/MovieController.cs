@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,9 +14,17 @@ namespace MovieSalesAPI.Controllers
     public class MovieController : ControllerBase
     {
         // GET: api/Movie
+        /// <summary>
+        /// Retrieve all movie details
+        /// </summary>
+        /// <returns>Returns a list of movie details.</returns>
+        [Authorize(Policy = "APIMovieAccess")]
         [HttpGet]
         public IEnumerable<string> GetAllMovieDetails()
         {
+            //Access the Claim.Name value
+            //var userName = User.Identity.Name;
+
             return new string[] { "value1", "value2" };
         }
 

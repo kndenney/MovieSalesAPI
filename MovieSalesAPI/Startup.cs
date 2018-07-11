@@ -15,11 +15,19 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MovieSalesAPI.Shared;
 using Swashbuckle.AspNetCore.Swagger;
+using MovieSalesAPILogic.Authorization;
+using System.Text;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace MovieSalesAPI
 {
     public class Startup
     {
+
+        public IConfiguration _configuration;
+        private string DefaultCorsPolicyName;
 
         //A few key things:
         //1. Install Swagger UI / Swashbuckle for API documentation
@@ -35,7 +43,7 @@ namespace MovieSalesAPI
 
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
+            _configuration = configuration;
         }
 
         public IConfiguration Configuration { get; }
@@ -72,12 +80,83 @@ namespace MovieSalesAPI
 
             });
 
+            string issuer = "";
+            string audience = "";
+            switch (_configuration["Environment"])
+            {
+                case "Development":
+                    issuer = _configuration["EnvironmentInfo:DevelopmentIssuerURL"];
+                    audience = _configuration["EnvironmentInfo:DevelopmentAudienceURL"];
+                    break;
+                case "UAT":
+                    issuer = _configuration["EnvironmentInfo.UATIssuerURL"];
+                    audience = _configuration["EnvironmentInfo.UATAudienceURL"];
+                    break;
+                case "Production":
+                    issuer = _configuration["EnvironmentInfo.ProductionIssuerURL"];
+                    audience = _configuration["EnvironmentInfo.ProductionAudienceURL"];
+                    break;
+                default:
+                    issuer = "";
+                    audience = "";
+                    break;
+            }
+
+            DefaultCorsPolicyName = issuer;
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                //.AddCookie(options => {
+                //    options.LoginPath = "/Account/Unauthorized/";
+                //    options.AccessDeniedPath = "/Account/Forbidden/";
+                //})
+                .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = "Issuer",
+                    ValidAudience = "Audience",
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWTKey"])),
+                    ClockSkew = TimeSpan.FromMinutes(0),
+                    RequireExpirationTime = true
+                };
+            });
+
+            // api user claim policy
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("APIMovieAccess",
+                            policy => policy.RequireClaim("CanAccessMovies"));
+            });
+
+            // Configure CORS for angular2 UI
+            var origins = issuer.Split(',').ToArray();
+            /*services.AddCors(options =>
+            {
+                options.AddPolicy(DefaultCorsPolicyName, builder =>
+                {
+                    // App:CorsOrigins in appsettings.json can contain more than one address separated by comma.
+                    builder
+                        .WithOrigins(origins)
+                        .AllowAnyHeader()
+                        .AllowAnyMethod()
+                        .AllowCredentials()
+                        .Build();
+                });
+            });*/
+
+            services.AddSwaggerDocumentation();
+
             services.AddMvc(config =>
             {
                 // Add XML Content Negotiation
-                config.RespectBrowserAcceptHeader = true;
-                config.InputFormatters.Add(new XmlSerializerInputFormatter());
-                config.OutputFormatters.Add(new XmlSerializerOutputFormatter());
+                /* config.RespectBrowserAcceptHeader = true;
+                 config.InputFormatters.Add(new XmlSerializerInputFormatter());
+                 config.OutputFormatters.Add(new XmlSerializerOutputFormatter());
+                 */
             });
         }
 
@@ -85,7 +164,10 @@ namespace MovieSalesAPI
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
 
+            // app.UseCors("CorsPolicy");
             app.UseEditResponseMiddleware();
+
+            app.UseResponseCodeMiddleware();
 
             if (env.IsDevelopment())
             {
@@ -96,12 +178,11 @@ namespace MovieSalesAPI
                 app.UseHsts();
             }
 
-            app.UseResponseCodeMiddleware();
-
             app.UseHttpsRedirection();
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
+            app.UseSwaggerDocumentation();
 
             // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), 
             // specifying the Swagger JSON endpoint.
@@ -109,6 +190,8 @@ namespace MovieSalesAPI
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Movies API V1");
             });
+
+            app.UseAuthentication();
 
             app.UseMvc();
         }

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Http.Headers;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
@@ -46,6 +48,9 @@ namespace MovieSalesAPI.Shared
                         case 200:
                             message = "Response is ok";
                             break;
+                        case 401:
+                            message = "Unauthorized access";
+                            break;
                         case 404:
                             message = "Resource not found";
                             break;
@@ -70,16 +75,16 @@ namespace MovieSalesAPI.Shared
                         addComma = ",";
                     }
 
-                   string json = "\"message\": [" + JsonConvert.SerializeObject(
-                        new Error()
+                    string json = addComma + "\"message\": [" +
+                        JsonConvert.SerializeObject(new Error()
                         {   
                             Code = statusCode.ToString(),
                             Message = message.ToString(),
                             Path = httpContext.Request.Path.ToString() + httpContext.Request.QueryString
-                        }
-                    ) + "]";
+                        }) + "]";
 
-                    await httpContext.Response.WriteAsync(addComma + json);
+                    httpContext.Response.ContentType = new MediaTypeHeaderValue("application/json").ToString();
+                    await httpContext.Response.WriteAsync(json, Encoding.UTF8);
                 }
                 catch (Exception ex)
                 {

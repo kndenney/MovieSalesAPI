@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.27703.2026
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MovieSalesAPI", "MovieSalesAPI\MovieSalesAPI.csproj", "{DECFE450-9DBE-4A77-8EAE-AACA66B7D054}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieSalesAPILogic", "MovieSalesAPILogic\MovieSalesAPILogic.csproj", "{8FBE0419-1A0D-40E2-9737-2F6440AE10BC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MovieSalesAPILogic", "MovieSalesAPILogic\MovieSalesAPILogic.csproj", "{8FBE0419-1A0D-40E2-9737-2F6440AE10BC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -26,15 +26,18 @@ namespace MovieSalesAPILogic.Authorization
             return false;
         }
 
-        public string CreateToken(TokenRequest request)
+        public List<TokenResponse> CreateToken(TokenRequest request)
         {
             //The username and password would be pulled either from a secure server
             //or database in our class library codebase or some other DAL
             if (Authorize(request))
             {
+                var handler = new JwtSecurityTokenHandler();
+
                 var claims = new[]
                 {
-                    new Claim(ClaimTypes.Name, request.Username)
+                    new Claim(ClaimTypes.Name, request.Username),
+                    new Claim("CanAccessMovies", "")
                 };
 
                 var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWTKey"]));
@@ -73,17 +76,29 @@ namespace MovieSalesAPILogic.Authorization
                         break;
                 }
 
-                var token = new JwtSecurityToken(
-                    issuer: issuer,
-                    audience: audience,
-                    claims: claims,
-                    expires: DateTime.Now.AddMinutes(30),
-                    signingCredentials: creds);
+                DateTime tokenExpirationTime = DateTime.Now.AddMinutes(Convert.ToInt32(_configuration["JWTExpirationLengthInMinutes"]));
 
-                return new JwtSecurityTokenHandler().WriteToken(token);
+                TokenResponse response = new TokenResponse();
+                response.Token = new JwtSecurityTokenHandler().WriteToken(
+                    new JwtSecurityToken(
+                    issuer: "Issuer",
+                    audience: "Audience",
+                    claims: claims,
+                    notBefore: DateTime.Now,
+                    expires: tokenExpirationTime,
+                    signingCredentials: creds)
+                );
+
+                response.expiration = tokenExpirationTime;
+                response.Username = request.Username;
+
+                List<TokenResponse> tokenList = new List<TokenResponse>();
+                tokenList.Add(response);
+
+                return tokenList;
             }
 
-            return "";
+            return null;
         }
 
 

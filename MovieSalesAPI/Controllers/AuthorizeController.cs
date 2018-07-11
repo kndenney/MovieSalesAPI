@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using MovieSalesAPILogic;
+using MovieSalesAPILogic.Authorization;
 
 namespace MovieSalesAPI.Controllers
 {
@@ -23,6 +24,10 @@ namespace MovieSalesAPI.Controllers
     {
         private readonly IConfiguration _configuration;
 
+        /// <summary>
+        /// Controller that authorizes a JWT token for users
+        /// </summary>
+        /// <param name="configuration"></param>
         public AuthorizeController(IConfiguration configuration)
         {
             _configuration = configuration;
@@ -39,7 +44,7 @@ namespace MovieSalesAPI.Controllers
         [Route("create/token")]
         [AllowAnonymous]
         [HttpPost]
-        public string CreateToken([FromBody] TokenRequest request)
+        public List<TokenResponse> CreateToken([FromBody] TokenRequest request)
         {
             return new MovieSalesAPILogic.Authorization.Token(_configuration).CreateToken(request);
         }

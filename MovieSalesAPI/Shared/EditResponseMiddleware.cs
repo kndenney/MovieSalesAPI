@@ -47,16 +47,16 @@ namespace MovieSalesAPI.Shared
                 {
                    if (json.StartsWith("\"message\": [{\"Code\""))
                     {
-                        json = "{ \"data:\" [], " + json + " }";
+                        json = "{ \"data\": [], " + json + " }";
                     
                     }
                     else if (json.StartsWith("{\"error\":\""))
                     {
-                        json = "{ \"data:\": [], " + json + " }";
+                        json = "{ \"data\": [], " + json + " }";
                     }
                     else
                     {
-                        json = "{ \"data:\": " + json + " }";
+                        json = "{ \"data\": " + json + " }";
                     }
 
                     //Throw new exception
