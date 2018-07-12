@@ -17,7 +17,7 @@ namespace MovieSalesAPILogic.Authorization
             _configuration = configuration;
         }
 
-        public bool Authorize(TokenRequest request)
+        public bool Authorize(ITokenRequest request)
         {
             if (request.Username == _configuration["JWTUsername"] && request.Password == _configuration["JWTPassword"])
             {
@@ -26,7 +26,7 @@ namespace MovieSalesAPILogic.Authorization
             return false;
         }
 
-        public List<TokenResponse> CreateToken(TokenRequest request)
+        public List<ITokenResponse> CreateToken(ITokenRequest request)
         {
             //The username and password would be pulled either from a secure server
             //or database in our class library codebase or some other DAL
@@ -92,7 +92,7 @@ namespace MovieSalesAPILogic.Authorization
                 response.expiration = tokenExpirationTime;
                 response.Username = request.Username;
 
-                List<TokenResponse> tokenList = new List<TokenResponse>();
+                List<ITokenResponse> tokenList = new List<ITokenResponse>();
                 tokenList.Add(response);
 
                 return tokenList;

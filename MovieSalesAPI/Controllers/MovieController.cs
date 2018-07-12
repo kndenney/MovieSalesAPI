@@ -14,7 +14,7 @@ namespace MovieSalesAPI.Controllers
     /// <summary>
     /// Retrieve and interact with movie data.
     /// </summary>
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class MovieController : Controller
     {
@@ -31,6 +31,7 @@ namespace MovieSalesAPI.Controllers
         {
             _movieData = movieData;
         }
+
         // GET: api/Movie
         /// <summary>
         /// Retrieve all movie details
@@ -38,8 +39,8 @@ namespace MovieSalesAPI.Controllers
         /// <returns>Returns a list of movie details.</returns>
         [Authorize(Policy = "APIMovieAccess")]
         [HttpGet]
-        [Route("all/movies")]
-        public List<Movie> GetAllMovieDetails
+        [Route("all")]
+        public List<IMovie> GetAllMovieDetails
             (
                 [FromHeader] string authorization
             )
@@ -61,34 +62,65 @@ namespace MovieSalesAPI.Controllers
             if (User.Identity.IsAuthenticated)
             {
                 return _movieData.RetrieveAllMovies(User.Identity.Name);
-            } else
+            }
+            else
             {
                 return null;
             }
         }
 
-        // GET: api/Movie/5
-        [HttpGet("{id}", Name = "Get")]
-        public string GetSpecificMovieDetails(int id)
+        // GET: Movie/id
+        /// <summary>
+        /// Retrieve specific movie
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("{id}")]
+        public string GetSpecificMovieDetailsById(int id)
         {
             return "value";
         }
 
-        // POST: api/Movie
+
+        // GET: Movie/name
+        /// <summary>
+        /// Retrieve specific movie by name
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("{name}")]
+        public string GetSpecificMovieDetailsByName(string name)
+        {
+            return "value";
+        }
+
+
+        // POST: Movie/create
         [HttpPost]
         public void PostMovieToDatabase([FromBody] string value)
         {
         }
 
-        // PUT: api/Movie/5
-        [HttpPut("{id}")]
+        // PUT: Movie/update
+        [HttpPut]
+        [Route("{id}")]
         public void PutMovieToDatabase(int id, [FromBody] string value)
         {
         }
 
-        // DELETE: api/ApiWithActions/5
-        [HttpDelete("{id}")]
-        public void DeleteMovieFromDatabase(int id)
+        // DELETE: Movie/id
+        [HttpDelete]
+        [Route("{id}")]
+        public void DeleteMovieFromDatabaseById(int id)
+        {
+        }
+
+        // DELETE: Movie/name
+        [HttpDelete]
+        [Route("{name}")]
+        public void DeleteMovieFromDatabaseByName(string name)
         {
         }
     }

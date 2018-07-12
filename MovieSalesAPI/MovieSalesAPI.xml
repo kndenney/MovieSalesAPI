@@ -38,6 +38,20 @@
             </summary>
             <returns>Returns a list of movie details.</returns>
         </member>
+        <member name="M:MovieSalesAPI.Controllers.MovieController.GetSpecificMovieDetailsById(System.Int32)">
+            <summary>
+            Retrieve specific movie
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MovieSalesAPI.Controllers.MovieController.GetSpecificMovieDetailsByName(System.String)">
+            <summary>
+            Retrieve specific movie by name
+            </summary>
+            <param name="name"></param>
+            <returns></returns>
+        </member>
         <member name="M:MovieSalesAPI.Controllers.ValuesController.Get">
             <summary>
             Retrieve all movies

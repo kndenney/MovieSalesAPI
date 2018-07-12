@@ -44,7 +44,7 @@ namespace MovieSalesAPI.Controllers
         [Route("create/token")]
         [AllowAnonymous]
         [HttpPost]
-        public List<TokenResponse> CreateToken([FromBody] TokenRequest request)
+        public List<ITokenResponse> CreateToken([FromBody] TokenRequest request)
         {
             return new MovieSalesAPILogic.Authorization.Token(_configuration).CreateToken(request);
         }

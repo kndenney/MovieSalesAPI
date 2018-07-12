@@ -32,49 +32,55 @@ namespace MovieSalesAPI.Data
         /// </summary>
         /// <param name="username"></param>
         /// <returns>Return a list of all movies for the user.</returns>
-        public List<Movie> RetrieveAllMovies(
+        public List<IMovie> RetrieveAllMovies(
                 string username
             )
         {
-
-            CacheName = "Movies" + username;
-
-            //If the cache exists return it
-            if (_memoryCache.TryGetValue(CacheName, out List<Movie> movies))
+            try
             {
-                return movies;
-            }
+                CacheName = "Movies" + username;
 
-            //Retrieve the movies from the database based on the username
-            //of the JWT token username
-            using (var connection = new SqlConnection("test"))
-            {
-                DynamicParameters parameters = new DynamicParameters();
+                //If the cache exists return it
+                if (_memoryCache.TryGetValue(CacheName, out List<IMovie> movies))
+                {
+                    return movies;
+                }
 
-                parameters.Add("@user", dbType: DbType.AnsiString, value: username, direction: ParameterDirection.Input);
+                //Retrieve the movies from the database based on the username
+                //of the JWT token username
+                using (var connection = new SqlConnection("test"))
+                {
+                    DynamicParameters parameters = new DynamicParameters();
 
-                var results = connection.Query<Movie>("sprocName", parameters, commandType: CommandType.StoredProcedure);
+                    parameters.Add("@user", dbType: DbType.AnsiString, value: username, direction: ParameterDirection.Input);
 
-                //The cache was empty therefore set a new cache object
-                _memoryCache.Set(
-                    CacheName,
-                    results,
-                    new MemoryCacheEntryOptions()
-                    .SetAbsoluteExpiration(
-                        DateTimeOffset.UtcNow.AddMinutes(
-                            untilMidnight.TotalMinutes
+                    var results = connection.Query<IMovie>("sprocName", parameters, commandType: CommandType.StoredProcedure);
+
+                    //The cache was empty therefore set a new cache object
+                    _memoryCache.Set(
+                        CacheName,
+                        results,
+                        new MemoryCacheEntryOptions()
+                        .SetAbsoluteExpiration(
+                            DateTimeOffset.UtcNow.AddMinutes(
+                                untilMidnight.TotalMinutes
+                            )
                         )
-                    )
-                );
+                    );
 
-                return results.ToList();
+                    return results.ToList();
+                }
             }
+            catch(Exception ex)
+            {
+                return null;
+            }         
         }
     }
 
     public interface IMovieData
     {
-        List<Movie> RetrieveAllMovies(
+        List<IMovie> RetrieveAllMovies(
              string username
          );
     }
