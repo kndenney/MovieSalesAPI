@@ -61,7 +61,7 @@ namespace MovieSalesAPI.Controllers
 
             if (User.Identity.IsAuthenticated)
             {
-                return _movieData.RetrieveAllMovies(User.Identity.Name);
+                return _movieData.GetAllMovieDetails(User.Identity.Name);
             }
             else
             {
@@ -69,45 +69,61 @@ namespace MovieSalesAPI.Controllers
             }
         }
 
-        // GET: Movie/id
+        // GET: Movie/movieid
         /// <summary>
         /// Retrieve specific movie
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="movieid"></param>
         /// <returns></returns>
         [HttpGet]
-        [Route("{id}")]
-        public string GetSpecificMovieDetailsById(int id)
+        [Route("{movieid}")]
+        public List<IMovie> GetSpecificMovieDetailsById(int movieid)
         {
-            return "value";
+            if (User.Identity.IsAuthenticated)
+            {
+                return _movieData.GetSpecificMovieDetailsById(movieid, User.Identity.Name);
+            }
+            else
+            {
+                return null;
+            }
         }
 
 
-        // GET: Movie/name
+        // GET: Movie/moviename
         /// <summary>
         /// Retrieve specific movie by name
         /// </summary>
-        /// <param name="name"></param>
+        /// <param name="moviename"></param>
         /// <returns></returns>
         [HttpGet]
-        [Route("{name}")]
-        public string GetSpecificMovieDetailsByName(string name)
+        [Route("{moviename}")]
+        public List<IMovie> GetSpecificMovieDetailsByName(string moviename)
         {
-            return "value";
+            if (User.Identity.IsAuthenticated)
+            {
+                return _movieData.GetSpecificMovieDetailsByName(moviename, User.Identity.Name);
+            }
+            else
+            {
+                return null;
+            }
         }
 
 
         // POST: Movie/create
         [HttpPost]
-        public void PostMovieToDatabase([FromBody] string value)
+        public List<IMovie> SaveMovieToDatabase([FromBody] IMovie movie)
         {
+            return null;
         }
 
         // PUT: Movie/update
         [HttpPut]
         [Route("{id}")]
-        public void PutMovieToDatabase(int id, [FromBody] string value)
+        public List<IMovie> UpdateMovieInDatabase(int id, [FromBody] IMovie movie)
         {
+            return null;
         }
 
         // DELETE: Movie/id
