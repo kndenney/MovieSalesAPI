@@ -29,7 +29,7 @@ namespace MovieSalesAPI.Data
 
         //Example of Http REST Web API:
         //https://medium.com/@maheshi.gunarathne1994/web-api-using-asp-net-core-2-0-and-entity-framework-core-with-mssql-59d30f33ff64
-
+        //https://apihandyman.io/api-design-tips-and-tricks-getting-creating-updating-or-deleting-multiple-resources-in-one-api-call/
 
         #region GET REQUESTS
 
@@ -191,6 +191,10 @@ namespace MovieSalesAPI.Data
             }
         }
 
+        #endregion
+
+        #region PUT/POST/PATCH REQUESTS
+
         /// <summary>
         /// Save a movie
         /// </summary>
@@ -222,6 +226,9 @@ namespace MovieSalesAPI.Data
         {
             return null;
         }
+
+        #endregion
+
     }
 
     public interface IMovieData

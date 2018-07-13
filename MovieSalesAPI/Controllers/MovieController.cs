@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using MovieSalesAPI.Data;
 
@@ -39,7 +40,7 @@ namespace MovieSalesAPI.Controllers
         /// <returns>Returns a list of movie details.</returns>
         [Authorize(Policy = "APIMovieAccess")]
         [HttpGet]
-        [Route("all")]
+        [Route("get")]
         public List<IMovie> GetAllMovieDetails
             (
                 [FromHeader] string authorization
@@ -73,11 +74,12 @@ namespace MovieSalesAPI.Controllers
         /// <summary>
         /// Retrieve specific movie
         /// </summary>
-        /// <param name="movieid"></param>
-        /// <returns></returns>
+        /// <param name="movieid">Movie Id</param>
+        /// <returns>Return a movie</returns>
+        [Authorize(Policy = "APIMovieAccess")]
         [HttpGet]
-        [Route("{movieid}")]
-        public List<IMovie> GetSpecificMovieDetailsById(int movieid)
+        [Route("get/{movieid}")]
+        public List<IMovie> GetSpecificMovieDetailsById([FromRoute] int movieid)
         {
             if (User.Identity.IsAuthenticated)
             {
@@ -94,11 +96,12 @@ namespace MovieSalesAPI.Controllers
         /// <summary>
         /// Retrieve specific movie by name
         /// </summary>
-        /// <param name="moviename"></param>
-        /// <returns></returns>
+        /// <param name="moviename">Movie Name</param>
+        /// <returns>Return a movie</returns>
+        [Authorize(Policy = "APIMovieAccess")]
         [HttpGet]
-        [Route("{moviename}")]
-        public List<IMovie> GetSpecificMovieDetailsByName(string moviename)
+        [Route("get/{moviename}")]
+        public List<IMovie> GetSpecificMovieDetailsByName([FromRoute] string moviename)
         {
             if (User.Identity.IsAuthenticated)
             {
@@ -112,31 +115,87 @@ namespace MovieSalesAPI.Controllers
 
 
         // POST: Movie/create
+        /// <summary>
+        /// Create a new movie
+        /// </summary>
+        /// <param name="movie">Movie</param>
+        /// <returns>Return the movie created</returns>
+        [Authorize(Policy = "APIMovieAccess")]
         [HttpPost]
+        [Route("save")]
         public List<IMovie> SaveMovieToDatabase([FromBody] IMovie movie)
         {
             return null;
         }
 
         // PUT: Movie/update
+        /// <summary>
+        /// Update an entire movie
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="movie"></param>
+        /// <returns>Return the movie that was updated</returns>
+        [Authorize(Policy = "APIMovieAccess")]
         [HttpPut]
-        [Route("{id}")]
-        public List<IMovie> UpdateMovieInDatabase(int id, [FromBody] IMovie movie)
+        [Route("save/{id}")]
+        public List<IMovie> UpdateEntireMovieInDatabaseById([FromRoute] int id, [FromBody] IMovie movie)
         {
             return null;
         }
 
+        [Authorize(Policy = "APIMovieAccess")]
+        [HttpPut]
+        [Route("save/{moviename}")]
+        public List<IMovie> UpdateEntireMovieInDatabaseByName([FromRoute] string moviename, [FromBody] IMovie movie)
+        {
+            return null;
+        }
+
+        //PATCH Example: https://dotnetcoretutorials.com/2017/11/29/json-patch-asp-net-core/
+        //https://kimsereyblog.blogspot.com/2017/11/implement-patch-on-asp-net-core-with.html
+        //If you do not have the PATCH Nuget package
+        //Open Tools > Package Manager Console
+        //Do this command:
+        //Install-Package Microsoft.AspNetCore.JsonPatch
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="movieid"></param>
+        /// <param name="moviePatch"></param>
+        /// <returns>Return the updated movie</returns>
+        [Authorize(Policy = "APIMovieAccess")]
+        [HttpPatch]
+        [Route("update/{id}")]
+        public List<IMovie> UpdatePartialMovieInDatabaseById([FromRoute]int movieid, [FromBody]JsonPatchDocument<IMovie> moviePatch)
+        {
+            //The idea is that you pull: somemoviefromdatabase
+            //From the database
+            //Then apply the 'moviePatch' to it
+            //then save it back to the database
+            //then reutrn the newly changed somemoviefromdatabase
+            //object tback to the user
+
+            List<IMovie> someMovie = _movieData.GetSpecificMovieDetailsById(movieid, User.Identity.Name);
+            moviePatch.ApplyTo(someMovie[0]);
+
+            _movieData.SaveMovieToDatabase(someMovie[0], User.Identity.Name);
+            return someMovie;
+        }
+
         // DELETE: Movie/id
+        [Authorize(Policy = "APIMovieAccess")]
         [HttpDelete]
-        [Route("{id}")]
-        public void DeleteMovieFromDatabaseById(int id)
+        [Route("delete/{id}")]
+        public void DeleteMovieFromDatabaseById([FromRoute] int id)
         {
         }
 
         // DELETE: Movie/name
+        [Authorize(Policy = "APIMovieAccess")]
         [HttpDelete]
-        [Route("{name}")]
-        public void DeleteMovieFromDatabaseByName(string name)
+        [Route("delete/{name}")]
+        public void DeleteMovieFromDatabaseByName([FromRoute] string name)
         {
         }
     }
