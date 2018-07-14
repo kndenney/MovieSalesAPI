@@ -137,15 +137,21 @@ namespace MovieSalesAPI.Controllers
         /// <returns>Return the movie that was updated</returns>
         [Authorize(Policy = "APIMovieAccess")]
         [HttpPut]
-        [Route("save/{id}")]
+        [Route("update/{id}")]
         public List<IMovie> UpdateEntireMovieInDatabaseById([FromRoute] int id, [FromBody] IMovie movie)
         {
             return null;
         }
 
+        /// <summary>
+        /// Update movie
+        /// </summary>
+        /// <param name="moviename"></param>
+        /// <param name="movie"></param>
+        /// <returns>Return updated movie</returns>
         [Authorize(Policy = "APIMovieAccess")]
         [HttpPut]
-        [Route("save/{moviename}")]
+        [Route("update/{moviename}")]
         public List<IMovie> UpdateEntireMovieInDatabaseByName([FromRoute] string moviename, [FromBody] IMovie movie)
         {
             return null;
@@ -159,11 +165,11 @@ namespace MovieSalesAPI.Controllers
         //Install-Package Microsoft.AspNetCore.JsonPatch
 
         /// <summary>
-        /// 
+        /// Patch a portion of a movie
         /// </summary>
         /// <param name="movieid"></param>
         /// <param name="moviePatch"></param>
-        /// <returns>Return the updated movie</returns>
+        /// <returns>Return the patched movie</returns>
         [Authorize(Policy = "APIMovieAccess")]
         [HttpPatch]
         [Route("update/{id}")]
@@ -184,6 +190,10 @@ namespace MovieSalesAPI.Controllers
         }
 
         // DELETE: Movie/id
+        /// <summary>
+        /// Delete a movie by id
+        /// </summary>
+        /// <param name="id"></param>
         [Authorize(Policy = "APIMovieAccess")]
         [HttpDelete]
         [Route("delete/{id}")]
@@ -192,6 +202,10 @@ namespace MovieSalesAPI.Controllers
         }
 
         // DELETE: Movie/name
+        /// <summary>
+        /// Delete a movie by name - *Could delete more than one movie with same name
+        /// </summary>
+        /// <param name="name"></param>
         [Authorize(Policy = "APIMovieAccess")]
         [HttpDelete]
         [Route("delete/{name}")]
