@@ -51,6 +51,9 @@ import { FetchDataComponent } from '../fetch-data/fetch-data.component';
 //JSON Web Token Interceptor to add Authorization header to HTTP calls
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { TokenInterceptor } from '../shared/authorization/tokeninterceptor';
+import { LoginComponent } from '../login/login.component';
+import { AuthGuard } from '../shared/auth.guard';
+import { AuthorizationService } from '../shared/authorization/services/authorization.service';
 
 @NgModule({
   declarations: [
@@ -58,7 +61,8 @@ import { TokenInterceptor } from '../shared/authorization/tokeninterceptor';
     NavMenuComponent,
     HomeComponent,
     CounterComponent,
-    FetchDataComponent
+    FetchDataComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
@@ -68,9 +72,12 @@ import { TokenInterceptor } from '../shared/authorization/tokeninterceptor';
       { path: '', component: HomeComponent, pathMatch: 'full' },
       { path: 'counter', component: CounterComponent },
       { path: 'fetch-data', component: FetchDataComponent },
+      { path: 'login', component: LoginComponent }
     ])
   ],
   providers: [
+    AuthGuard,
+    AuthorizationService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptor,
