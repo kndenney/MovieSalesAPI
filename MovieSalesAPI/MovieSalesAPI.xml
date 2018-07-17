@@ -42,15 +42,58 @@
             <summary>
             Retrieve specific movie
             </summary>
-            <param name="id"></param>
-            <returns></returns>
+            <param name="movieid">Movie Id</param>
+            <returns>Return a movie</returns>
         </member>
         <member name="M:MovieSalesAPI.Controllers.MovieController.GetSpecificMovieDetailsByName(System.String)">
             <summary>
             Retrieve specific movie by name
             </summary>
+            <param name="moviename">Movie Name</param>
+            <returns>Return a movie</returns>
+        </member>
+        <member name="M:MovieSalesAPI.Controllers.MovieController.SaveMovieToDatabase(MovieSalesAPI.IMovie)">
+            <summary>
+            Create a new movie
+            </summary>
+            <param name="movie">Movie</param>
+            <returns>Return the movie created</returns>
+        </member>
+        <member name="M:MovieSalesAPI.Controllers.MovieController.UpdateEntireMovieInDatabaseById(System.Int32,MovieSalesAPI.IMovie)">
+            <summary>
+            Update an entire movie
+            </summary>
+            <param name="id"></param>
+            <param name="movie"></param>
+            <returns>Return the movie that was updated</returns>
+        </member>
+        <member name="M:MovieSalesAPI.Controllers.MovieController.UpdateEntireMovieInDatabaseByName(System.String,MovieSalesAPI.IMovie)">
+            <summary>
+            Update movie
+            </summary>
+            <param name="moviename"></param>
+            <param name="movie"></param>
+            <returns>Return updated movie</returns>
+        </member>
+        <member name="M:MovieSalesAPI.Controllers.MovieController.UpdatePartialMovieInDatabaseById(System.Int32,Microsoft.AspNetCore.JsonPatch.JsonPatchDocument{MovieSalesAPI.IMovie})">
+            <summary>
+            Patch a portion of a movie
+            </summary>
+            <param name="movieid"></param>
+            <param name="moviePatch"></param>
+            <returns>Return the patched movie</returns>
+        </member>
+        <member name="M:MovieSalesAPI.Controllers.MovieController.DeleteMovieFromDatabaseById(System.Int32)">
+            <summary>
+            Delete a movie by id
+            </summary>
+            <param name="id"></param>
+        </member>
+        <member name="M:MovieSalesAPI.Controllers.MovieController.DeleteMovieFromDatabaseByName(System.String)">
+            <summary>
+            Delete a movie by name - *Could delete more than one movie with same name
+            </summary>
             <param name="name"></param>
-            <returns></returns>
         </member>
         <member name="M:MovieSalesAPI.Controllers.ValuesController.Get">
             <summary>
@@ -70,12 +113,45 @@
             Model class for movie details
             </summary>
         </member>
-        <member name="M:MovieSalesAPI.Data.MovieData.RetrieveAllMovies(System.String)">
+        <member name="M:MovieSalesAPI.Data.MovieData.GetAllMovieDetails(System.String)">
             <summary>
             Retrieve all the users movies
             </summary>
             <param name="username"></param>
             <returns>Return a list of all movies for the user.</returns>
+        </member>
+        <member name="M:MovieSalesAPI.Data.MovieData.GetSpecificMovieDetailsById(System.Int32,System.String)">
+            <summary>
+            Retrieve a movie by id
+            </summary>
+            <param name="movieid"></param>
+            <param name="username"></param>
+            <returns>Return a movie</returns>
+        </member>
+        <member name="M:MovieSalesAPI.Data.MovieData.GetSpecificMovieDetailsByName(System.String,System.String)">
+            <summary>
+            Retrieve a movie by name
+            </summary>
+            <param name="moviename"></param>
+            <param name="username"></param>
+            <returns>Return a movie</returns>
+        </member>
+        <member name="M:MovieSalesAPI.Data.MovieData.SaveMovieToDatabase(MovieSalesAPI.IMovie,System.String)">
+            <summary>
+            Save a movie
+            </summary>
+            <param name="movie"></param>
+            <param name="username"></param>
+            <returns>Return the movie saved</returns>
+        </member>
+        <member name="M:MovieSalesAPI.Data.MovieData.UpdateMovieInDatabase(System.Int32,MovieSalesAPI.IMovie,System.String)">
+            <summary>
+            Update a movie
+            </summary>
+            <param name="id"></param>
+            <param name="movie"></param>
+            <param name="username"></param>
+            <returns>Return movie that was updated</returns>
         </member>
     </members>
 </doc>

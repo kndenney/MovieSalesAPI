@@ -21,6 +21,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using MovieSalesAPI.Data;
+using MovieSalesAPILogic;
 
 namespace MovieSalesAPI
 {
@@ -133,15 +134,17 @@ namespace MovieSalesAPI
                             policy => policy.RequireClaim("CanAccessMovies"));
             });
 
+
+            /*
             // Configure CORS for angular2 UI
             var origins = issuer.Split(',').ToArray();
-            /*services.AddCors(options =>
+
+            services.AddCors(options =>
             {
-                options.AddPolicy(DefaultCorsPolicyName, builder =>
+                options.AddPolicy("EnableCORS", builder =>
                 {
-                    // App:CorsOrigins in appsettings.json can contain more than one address separated by comma.
                     builder
-                        .WithOrigins(origins)
+                        .AllowAnyOrigin()
                         .AllowAnyHeader()
                         .AllowAnyMethod()
                         .AllowCredentials()
@@ -149,11 +152,26 @@ namespace MovieSalesAPI
                 });
             });*/
 
+
+            // Add service and create Policy with options
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy",
+                    builder => builder
+                   // .AllowAnyOrigin()
+                   .WithOrigins("http://localhost:4200")
+                     .AllowAnyHeader()
+                    .AllowAnyMethod()      
+                    .AllowCredentials()
+                    .Build());
+            });
+
             services.AddSwaggerDocumentation();
 
 
             //Add dependency injection for Data classes, models etc.
             services.AddTransient<IMovieData, MovieData>();
+            services.AddTransient<ITokenRequest, TokenRequest>();
 
             services.AddMvc(config =>
             {
@@ -169,7 +187,8 @@ namespace MovieSalesAPI
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
 
-            // app.UseCors("CorsPolicy");
+            app.UseCors("CorsPolicy");
+
             app.UseEditResponseMiddleware();
 
             app.UseResponseCodeMiddleware();
@@ -180,7 +199,7 @@ namespace MovieSalesAPI
             }
             else
             {
-                app.UseHsts();
+               app.UseHsts();
             }
 
             app.UseHttpsRedirection();
@@ -197,7 +216,7 @@ namespace MovieSalesAPI
             });
 
             app.UseAuthentication();
-
+   
             app.UseMvc();
         }
     }

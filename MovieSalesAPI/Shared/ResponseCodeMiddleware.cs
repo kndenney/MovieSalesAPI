@@ -103,7 +103,7 @@ namespace MovieSalesAPI.Shared
             //else if (exception is MyException) code = HttpStatusCode.BadRequest;
 
             var result = JsonConvert.SerializeObject(new { error = exception.Message });
-            context.Response.ContentType = "application/json";
+            //context.Response.ContentType = "application/json";
             context.Response.StatusCode = (int)code;
 
             int statusCode = (int)code;

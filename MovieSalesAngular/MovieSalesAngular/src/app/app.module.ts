@@ -54,6 +54,8 @@ import { TokenInterceptor } from '../shared/authorization/tokeninterceptor';
 import { LoginComponent } from '../login/login.component';
 import { AuthGuard } from '../shared/auth.guard';
 import { AuthorizationService } from '../shared/authorization/services/authorization.service';
+import { TokenRequest } from '../shared/authorization/models/tokenrequest';
+import { TokenResponse } from '../shared/authorization/models/tokenresponse';
 
 @NgModule({
   declarations: [
@@ -78,6 +80,8 @@ import { AuthorizationService } from '../shared/authorization/services/authoriza
   providers: [
     AuthGuard,
     AuthorizationService,
+    TokenRequest,
+    TokenResponse,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptor,

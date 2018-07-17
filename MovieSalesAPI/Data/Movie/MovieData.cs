@@ -166,7 +166,7 @@ namespace MovieSalesAPI.Data
                     DynamicParameters parameters = new DynamicParameters();
 
                     parameters.Add("@user", dbType: DbType.AnsiString, value: username, direction: ParameterDirection.Input);
-                    parameters.Add("@moviename", dbType: DbType.AnsiString, value: name, direction: ParameterDirection.Input);
+                    parameters.Add("@moviename", dbType: DbType.AnsiString, value: moviename, direction: ParameterDirection.Input);
 
                     var results = connection.Query<IMovie>("sprocName", parameters, commandType: CommandType.StoredProcedure);
 
@@ -201,7 +201,7 @@ namespace MovieSalesAPI.Data
         /// <param name="movie"></param>
         /// <param name="username"></param>
         /// <returns>Return the movie saved</returns>
-        List<IMovie> SaveMovieToDatabase
+        public List<IMovie> SaveMovieToDatabase
         (
             IMovie movie,
             string username
@@ -217,7 +217,7 @@ namespace MovieSalesAPI.Data
         /// <param name="movie"></param>
         /// <param name="username"></param>
         /// <returns>Return movie that was updated</returns>
-        List<IMovie> UpdateMovieInDatabase
+        public List<IMovie> UpdateMovieInDatabase
         (
             int id,
             IMovie movie,
