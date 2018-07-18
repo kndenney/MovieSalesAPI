@@ -20,7 +20,7 @@ namespace MovieSalesAPI.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
-    public class AuthorizeController : ControllerBase
+    public class UsersController : ControllerBase
     {
         private readonly IConfiguration _configuration;
 
@@ -28,7 +28,7 @@ namespace MovieSalesAPI.Controllers
         /// Controller that authorizes a JWT token for users
         /// </summary>
         /// <param name="configuration"></param>
-        public AuthorizeController(IConfiguration configuration)
+        public UsersController(IConfiguration configuration)
         {
             _configuration = configuration;
         }

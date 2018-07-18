@@ -17,8 +17,11 @@ namespace MovieSalesAPI.Controllers
     /// </summary>
     [Route("[controller]")]
     [ApiController]
-    public class MovieController : Controller
+    public class MoviesController : Controller
     {
+
+        //Good practices to keep in mind:
+        //https://blog.mwaysolutions.com/2014/06/05/10-best-practices-for-better-restful-api/
 
         private readonly IMovieData _movieData;
 
@@ -26,12 +29,14 @@ namespace MovieSalesAPI.Controllers
         /// Class Declaration
         /// </summary>
         /// <param name="movieData"></param>
-        public MovieController(
+        public MoviesController(
             IMovieData movieData
         )
         {
             _movieData = movieData;
         }
+
+        #region USERS API ACTIONS
 
         // GET: api/Movie
         /// <summary>
@@ -40,11 +45,11 @@ namespace MovieSalesAPI.Controllers
         /// <returns>Returns a list of movie details.</returns>
         [Authorize(Policy = "APIMovieAccess")]
         [HttpGet]
-        [Route("get")]
-        public List<IMovie> GetAllMovieDetails
-            (
-                [FromHeader] string authorization
-            )
+        [Route("users/all")]
+        public List<IMovie> GetAllUsersMovieDetails
+        (
+            // [FromHeader] string authorization
+        )
         {
 
             //Access the Claim.Name value
@@ -70,7 +75,7 @@ namespace MovieSalesAPI.Controllers
             }
         }
 
-        // GET: Movie/movieid
+        // GET: Movies/users/movieid
         /// <summary>
         /// Retrieve specific movie
         /// </summary>
@@ -78,7 +83,7 @@ namespace MovieSalesAPI.Controllers
         /// <returns>Return a movie</returns>
         [Authorize(Policy = "APIMovieAccess")]
         [HttpGet]
-        [Route("get/{movieid}")]
+        [Route("users/{movieid}")]
         public List<IMovie> GetSpecificMovieDetailsById([FromRoute] int movieid)
         {
             if (User.Identity.IsAuthenticated)
@@ -92,7 +97,7 @@ namespace MovieSalesAPI.Controllers
         }
 
 
-        // GET: Movie/moviename
+        // GET: Movies/users/moviename
         /// <summary>
         /// Retrieve specific movie by name
         /// </summary>
@@ -100,7 +105,7 @@ namespace MovieSalesAPI.Controllers
         /// <returns>Return a movie</returns>
         [Authorize(Policy = "APIMovieAccess")]
         [HttpGet]
-        [Route("get/{moviename}")]
+        [Route("users/{moviename}")]
         public List<IMovie> GetSpecificMovieDetailsByName([FromRoute] string moviename)
         {
             if (User.Identity.IsAuthenticated)
@@ -114,7 +119,7 @@ namespace MovieSalesAPI.Controllers
         }
 
 
-        // POST: Movie/create
+        // POST: Movies/movie
         /// <summary>
         /// Create a new movie
         /// </summary>
@@ -122,13 +127,13 @@ namespace MovieSalesAPI.Controllers
         /// <returns>Return the movie created</returns>
         [Authorize(Policy = "APIMovieAccess")]
         [HttpPost]
-        [Route("save")]
+        [Route("movie")]
         public List<IMovie> SaveMovieToDatabase([FromBody] IMovie movie)
         {
             return null;
         }
 
-        // PUT: Movie/update
+        // PUT: Movies/movie/id
         /// <summary>
         /// Update an entire movie
         /// </summary>
@@ -137,12 +142,13 @@ namespace MovieSalesAPI.Controllers
         /// <returns>Return the movie that was updated</returns>
         [Authorize(Policy = "APIMovieAccess")]
         [HttpPut]
-        [Route("update/{id}")]
+        [Route("movie/{id}")]
         public List<IMovie> UpdateEntireMovieInDatabaseById([FromRoute] int id, [FromBody] IMovie movie)
         {
             return null;
         }
 
+        // PUT: Movies/movie/imoviename
         /// <summary>
         /// Update movie
         /// </summary>
@@ -151,7 +157,7 @@ namespace MovieSalesAPI.Controllers
         /// <returns>Return updated movie</returns>
         [Authorize(Policy = "APIMovieAccess")]
         [HttpPut]
-        [Route("update/{moviename}")]
+        [Route("movie/{moviename}")]
         public List<IMovie> UpdateEntireMovieInDatabaseByName([FromRoute] string moviename, [FromBody] IMovie movie)
         {
             return null;
@@ -164,6 +170,7 @@ namespace MovieSalesAPI.Controllers
         //Do this command:
         //Install-Package Microsoft.AspNetCore.JsonPatch
 
+        //PATCH: Movies/movie/id
         /// <summary>
         /// Patch a portion of a movie
         /// </summary>
@@ -172,7 +179,7 @@ namespace MovieSalesAPI.Controllers
         /// <returns>Return the patched movie</returns>
         [Authorize(Policy = "APIMovieAccess")]
         [HttpPatch]
-        [Route("update/{id}")]
+        [Route("movie/{id}")]
         public List<IMovie> UpdatePartialMovieInDatabaseById([FromRoute]int movieid, [FromBody]JsonPatchDocument<IMovie> moviePatch)
         {
             //The idea is that you pull: somemoviefromdatabase
@@ -189,29 +196,32 @@ namespace MovieSalesAPI.Controllers
             return someMovie;
         }
 
-        // DELETE: Movie/id
+        // DELETE: Movies/movie/id
         /// <summary>
         /// Delete a movie by id
         /// </summary>
         /// <param name="id"></param>
         [Authorize(Policy = "APIMovieAccess")]
         [HttpDelete]
-        [Route("delete/{id}")]
+        [Route("movie/{id}")]
         public void DeleteMovieFromDatabaseById([FromRoute] int id)
         {
         }
 
-        // DELETE: Movie/name
+        // DELETE: Movies/movie/name
         /// <summary>
         /// Delete a movie by name - *Could delete more than one movie with same name
         /// </summary>
         /// <param name="name"></param>
         [Authorize(Policy = "APIMovieAccess")]
         [HttpDelete]
-        [Route("delete/{name}")]
+        [Route("movie/{name}")]
         public void DeleteMovieFromDatabaseByName([FromRoute] string name)
         {
             
         }
+
+        #endregion
+
     }
 }
