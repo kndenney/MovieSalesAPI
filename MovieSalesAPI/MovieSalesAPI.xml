@@ -4,62 +4,45 @@
         <name>MovieSalesAPI</name>
     </assembly>
     <members>
-        <member name="T:MovieSalesAPI.Controllers.AuthorizeController">
-            <summary>
-            Authenticate and authorize users to the movies API and data.
-            </summary>
-        </member>
-        <member name="M:MovieSalesAPI.Controllers.AuthorizeController.#ctor(Microsoft.Extensions.Configuration.IConfiguration)">
-            <summary>
-            Controller that authorizes a JWT token for users
-            </summary>
-            <param name="configuration"></param>
-        </member>
-        <member name="M:MovieSalesAPI.Controllers.AuthorizeController.CreateToken(MovieSalesAPILogic.TokenRequest)">
-            <summary>
-            
-            </summary>
-            <param name="request">Token Request posted in the form of Username and Password</param>
-        </member>
-        <member name="T:MovieSalesAPI.Controllers.MovieController">
+        <member name="T:MovieSalesAPI.Controllers.MoviesController">
             <summary>
             Retrieve and interact with movie data.
             </summary>
         </member>
-        <member name="M:MovieSalesAPI.Controllers.MovieController.#ctor(MovieSalesAPI.Data.IMovieData)">
+        <member name="M:MovieSalesAPI.Controllers.MoviesController.#ctor(MovieSalesAPI.Data.IMovieData)">
             <summary>
             Class Declaration
             </summary>
             <param name="movieData"></param>
         </member>
-        <member name="M:MovieSalesAPI.Controllers.MovieController.GetAllMovieDetails(System.String)">
+        <member name="M:MovieSalesAPI.Controllers.MoviesController.GetAllUsersMovieDetails">
             <summary>
             Retrieve all movie details
             </summary>
             <returns>Returns a list of movie details.</returns>
         </member>
-        <member name="M:MovieSalesAPI.Controllers.MovieController.GetSpecificMovieDetailsById(System.Int32)">
+        <member name="M:MovieSalesAPI.Controllers.MoviesController.GetSpecificMovieDetailsById(System.Int32)">
             <summary>
             Retrieve specific movie
             </summary>
             <param name="movieid">Movie Id</param>
             <returns>Return a movie</returns>
         </member>
-        <member name="M:MovieSalesAPI.Controllers.MovieController.GetSpecificMovieDetailsByName(System.String)">
+        <member name="M:MovieSalesAPI.Controllers.MoviesController.GetSpecificMovieDetailsByName(System.String)">
             <summary>
             Retrieve specific movie by name
             </summary>
             <param name="moviename">Movie Name</param>
             <returns>Return a movie</returns>
         </member>
-        <member name="M:MovieSalesAPI.Controllers.MovieController.SaveMovieToDatabase(MovieSalesAPI.IMovie)">
+        <member name="M:MovieSalesAPI.Controllers.MoviesController.SaveMovieToDatabase(MovieSalesAPI.IMovie)">
             <summary>
             Create a new movie
             </summary>
             <param name="movie">Movie</param>
             <returns>Return the movie created</returns>
         </member>
-        <member name="M:MovieSalesAPI.Controllers.MovieController.UpdateEntireMovieInDatabaseById(System.Int32,MovieSalesAPI.IMovie)">
+        <member name="M:MovieSalesAPI.Controllers.MoviesController.UpdateEntireMovieInDatabaseById(System.Int32,MovieSalesAPI.IMovie)">
             <summary>
             Update an entire movie
             </summary>
@@ -67,7 +50,7 @@
             <param name="movie"></param>
             <returns>Return the movie that was updated</returns>
         </member>
-        <member name="M:MovieSalesAPI.Controllers.MovieController.UpdateEntireMovieInDatabaseByName(System.String,MovieSalesAPI.IMovie)">
+        <member name="M:MovieSalesAPI.Controllers.MoviesController.UpdateEntireMovieInDatabaseByName(System.String,MovieSalesAPI.IMovie)">
             <summary>
             Update movie
             </summary>
@@ -75,7 +58,7 @@
             <param name="movie"></param>
             <returns>Return updated movie</returns>
         </member>
-        <member name="M:MovieSalesAPI.Controllers.MovieController.UpdatePartialMovieInDatabaseById(System.Int32,Microsoft.AspNetCore.JsonPatch.JsonPatchDocument{MovieSalesAPI.IMovie})">
+        <member name="M:MovieSalesAPI.Controllers.MoviesController.UpdatePartialMovieInDatabaseById(System.Int32,Microsoft.AspNetCore.JsonPatch.JsonPatchDocument{MovieSalesAPI.IMovie})">
             <summary>
             Patch a portion of a movie
             </summary>
@@ -83,17 +66,34 @@
             <param name="moviePatch"></param>
             <returns>Return the patched movie</returns>
         </member>
-        <member name="M:MovieSalesAPI.Controllers.MovieController.DeleteMovieFromDatabaseById(System.Int32)">
+        <member name="M:MovieSalesAPI.Controllers.MoviesController.DeleteMovieFromDatabaseById(System.Int32)">
             <summary>
             Delete a movie by id
             </summary>
             <param name="id"></param>
         </member>
-        <member name="M:MovieSalesAPI.Controllers.MovieController.DeleteMovieFromDatabaseByName(System.String)">
+        <member name="M:MovieSalesAPI.Controllers.MoviesController.DeleteMovieFromDatabaseByName(System.String)">
             <summary>
             Delete a movie by name - *Could delete more than one movie with same name
             </summary>
             <param name="name"></param>
+        </member>
+        <member name="T:MovieSalesAPI.Controllers.UsersController">
+            <summary>
+            Authenticate and authorize users to the movies API and data.
+            </summary>
+        </member>
+        <member name="M:MovieSalesAPI.Controllers.UsersController.#ctor(Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            Controller that authorizes a JWT token for users
+            </summary>
+            <param name="configuration"></param>
+        </member>
+        <member name="M:MovieSalesAPI.Controllers.UsersController.CreateToken(MovieSalesAPILogic.TokenRequest)">
+            <summary>
+            
+            </summary>
+            <param name="request">Token Request posted in the form of Username and Password</param>
         </member>
         <member name="M:MovieSalesAPI.Controllers.ValuesController.Get">
             <summary>
