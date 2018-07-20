@@ -18,9 +18,7 @@ export class HomeComponent {
   ) { }
 
   fireClientError() {
-    // throw new Error('Client Error. Shit happens :)');
-    // it is not defined, ups
-    return it.happens;
+     throw new Error('Client Error. Home :)');
   }
 
   fireServerError() {
@@ -28,5 +26,4 @@ export class HomeComponent {
             .get('https://jsonplaceholder.typicode.com/1')
             .subscribe();
   }
-
 }

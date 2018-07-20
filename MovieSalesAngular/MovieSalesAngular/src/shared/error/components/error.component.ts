@@ -5,7 +5,7 @@ import { ActivatedRoute } from '@angular/router';
   // tslint:disable-next-line:component-selector
   selector: 'error',
   templateUrl: './error.component.html',
-  styleUrls: ['./error.component.scss']
+  styleUrls: ['./error.component.css']
 })
 export class ErrorComponent implements OnInit {
   routeParams;

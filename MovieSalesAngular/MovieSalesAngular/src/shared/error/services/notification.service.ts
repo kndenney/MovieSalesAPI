@@ -1,10 +1,5 @@
 import { Injectable } from '@angular/core';
-
-import { Observable } from 'rxjs';
 import { BehaviorSubject } from 'rxjs';
-
-import 'rxjs/add/operator/publish';
-import { publish, publishReplay } from 'rxjs/operators';
 import 'rxjs';
 
 @Injectable()

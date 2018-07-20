@@ -1,11 +1,11 @@
-//errors.service.ts
+// errors.service.ts
 import { ErrorHandler, Injectable, Injector} from '@angular/core';
 import { Location, LocationStrategy, PathLocationStrategy } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import 'rxjs/add/observable/of';
+import { Observable, of } from 'rxjs';
+
 // Cool library to deal with errors: https://www.stacktracejs.com
-//import * as StackTraceParser from 'error-stack-parser';
+// import * as StackTraceParser from 'error-stack-parser';
 
 @Injectable()
 export class ErrorsService {
@@ -13,11 +13,9 @@ constructor(
     private injector: Injector,
   ) { }
 log(error): Observable<any> {
-    // Log the error to the console
-    console.error(error);
     // Send error to server
     const errorToSend = this.addContextInfo(error);
-     return null; // fakeHttpService.post(errorToSend);
+     return fakeHttpService.post(errorToSend);
 }
 
 addContextInfo(error) {
@@ -34,5 +32,12 @@ addContextInfo(error) {
     const stack = error instanceof HttpErrorResponse ? null : error;
     const errorToSend = {name, appId, user, time, id, url, status, message, stack};
     return errorToSend;
+  }
+}
+
+class fakeHttpService {
+  static post(error): Observable<any> {
+    console.log('Error sent to the server: ', error);
+    return of(error); // Observable.of(error);
   }
 }

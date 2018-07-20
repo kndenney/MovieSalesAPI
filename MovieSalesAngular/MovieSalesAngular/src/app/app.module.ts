@@ -26,6 +26,9 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FlexLayoutModule, BREAKPOINT} from '@angular/flex-layout';
 import { ErrorsHandler } from '../shared/error/error-handler';
 import { ServerErrorsInterceptor } from '../shared/error/interceptors/server.error.interceptor';
+import { NotificationService } from '../shared/error/services/notification.service';
+import { ErrorsService } from '../shared/error/services/error.service';
+import { HttpService } from '../shared/error/services/http.service';
 
 @NgModule({
   declarations: [
@@ -47,6 +50,7 @@ import { ServerErrorsInterceptor } from '../shared/error/interceptors/server.err
       { path: 'counter', component: CounterComponent },
       { path: 'fetch-data', component: FetchDataComponent },
       { path: 'home', component: HomeComponent },
+      { path: 'error', component: ErrorComponent },
       {
         path: 'login',
         loadChildren: '../modules/login.module#LoginModule'
@@ -59,6 +63,11 @@ import { ServerErrorsInterceptor } from '../shared/error/interceptors/server.err
   providers: [
     AuthGuard,
     AuthorizationService,
+    //These could probably be put into a error module?
+    NotificationService,
+    ErrorsService,
+    HttpService,
+    
     TokenRequest,
     TokenResponse,
     {

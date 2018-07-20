@@ -1,6 +1,6 @@
 // errors-handler.ts
-//See - https://medium.com/@aleixsuau/error-handling-angular-859d529fa53a
-//https://medium.com/@aleixsuau/error-handling-angular-859d529fa53a
+// See - https://medium.com/@aleixsuau/error-handling-angular-859d529fa53a
+// https://medium.com/@aleixsuau/error-handling-angular-859d529fa53a
 import { Router } from '@angular/router';
 import { ErrorHandler, Injectable, Injector} from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -10,9 +10,9 @@ import { NotificationService } from '../error/services/notification.service';
 
 @Injectable()
 export class ErrorsHandler implements ErrorHandler {
-//This is what we want to do
-//For brevity sake:
-//https://medium.com/@aleixsuau/error-handling-angular-859d529fa53a
+// This is what we want to do
+// For brevity sake:
+// https://medium.com/@aleixsuau/error-handling-angular-859d529fa53a
 
 constructor(
     // Because the ErrorHandler is created before the providers, we’ll have to use the Injector to get them.
@@ -20,14 +20,12 @@ constructor(
 ) { }
 
     public handleError(error: Error | HttpErrorResponse) {
-        
         const notificationService = this.injector.get(NotificationService);
         const errorsService = this.injector.get(ErrorsService);
         const router = this.injector.get(Router);
 
-        let err = new Errors();
+        const err = new Errors();
         err.data = error.error;
-      
 
         if (error instanceof HttpErrorResponse) {
 
@@ -38,8 +36,8 @@ constructor(
             // Server or connection error happened
             if (!navigator.onLine) {
                 // Handle offline error
-                //Perhaps redirect to some generic
-                //Not online page?
+                // Perhaps redirect to some generic
+                // Not online page?
                 return notificationService.notify('No Internet Connection');
             } else {
 
@@ -79,7 +77,7 @@ constructor(
         }
       }
 
-      private showError(message:string){
+      private showError(message: string) {
       /*  this.toastManager.error(message, DEFAULT_ERROR_TITLE, { dismiss: 'controlled'}).then((toast:Toast)=>{
                 let currentToastId:number = toast.id;
                 this.toastManager.onClickToast().subscribe(clickedToast => {
