@@ -1,27 +1,31 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, ErrorHandler } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
-import { Observable, Subject, asapScheduler, pipe, of, from, interval, merge, fromEvent } from 'rxjs';
 
-//Components
+// Components
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from '../nav-menu/nav-menu.component';
 import { HomeComponent } from '../home/home.component';
 import { CounterComponent } from '../counter/counter.component';
 import { FetchDataComponent } from '../fetch-data/fetch-data.component';
+import { ErrorComponent } from '../shared/error/components/error.component';
 
-//JSON Web Token Interceptor to add Authorization header to HTTP calls
+// JSON Web Token Interceptor to add Authorization header to HTTP calls
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { TokenInterceptor } from '../shared/authorization/tokeninterceptor';
 import { LoginComponent } from '../login/login.component';
-import { AuthGuard } from '../shared/auth.guard';
+import { AuthGuard } from '../shared/authorization/auth.guard';
 import { AuthorizationService } from '../shared/authorization/services/authorization.service';
 import { TokenRequest } from '../shared/authorization/models/tokenrequest';
 import { TokenResponse } from '../shared/authorization/models/tokenresponse';
 import { MaterialModule } from './material.module';
-import { BrowserAnimationsModule } from '../../node_modules/@angular/platform-browser/animations';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { FlexLayoutModule, BREAKPOINT} from '@angular/flex-layout';
+import { ErrorsHandler } from '../shared/error/error-handler';
+import { ServerErrorsInterceptor } from '../shared/error/interceptors/server.error.interceptor';
 
 @NgModule({
   declarations: [
@@ -30,7 +34,8 @@ import { BrowserAnimationsModule } from '../../node_modules/@angular/platform-br
     HomeComponent,
     CounterComponent,
     FetchDataComponent,
-    LoginComponent
+    LoginComponent,
+    ErrorComponent
   ],
   imports: [
     BrowserModule,
@@ -41,9 +46,15 @@ import { BrowserAnimationsModule } from '../../node_modules/@angular/platform-br
       { path: '', component: HomeComponent, pathMatch: 'full' },
       { path: 'counter', component: CounterComponent },
       { path: 'fetch-data', component: FetchDataComponent },
-      { path: 'login', component: LoginComponent }
+      { path: 'home', component: HomeComponent },
+      {
+        path: 'login',
+        loadChildren: '../modules/login.module#LoginModule'
+      },
     ]),
-    MaterialModule
+    MaterialModule,
+    NgbModule.forRoot(),
+    FlexLayoutModule
   ],
   providers: [
     AuthGuard,
@@ -54,6 +65,15 @@ import { BrowserAnimationsModule } from '../../node_modules/@angular/platform-br
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptor,
       multi: true
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: ServerErrorsInterceptor,
+      multi: true,
+    },
+    {
+      provide: ErrorHandler,
+      useClass: ErrorsHandler,
     }
   ],
   bootstrap: [AppComponent]

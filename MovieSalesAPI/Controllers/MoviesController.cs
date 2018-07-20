@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using MovieSalesAPI.Data;
 
 namespace MovieSalesAPI.Controllers
@@ -19,7 +20,6 @@ namespace MovieSalesAPI.Controllers
     [ApiController]
     public class MoviesController : Controller
     {
-
         //Good practices to keep in mind:
         //https://blog.mwaysolutions.com/2014/06/05/10-best-practices-for-better-restful-api/
 
@@ -32,7 +32,7 @@ namespace MovieSalesAPI.Controllers
         public MoviesController(
             IMovieData movieData
         )
-        {
+        { 
             _movieData = movieData;
         }
 
