@@ -25,19 +25,19 @@ export class RequestInterceptor implements HttpInterceptor {
     // It is older but this below code is the new RxJs 6 example for Angular 6
     
     return next.handle(request).pipe(tap((event: HttpEvent<any>) => {}, (err: any) => {
-      
-      this.errorHandler.handleError(err);
-
       if (!navigator.onLine) {
         // No Internet connection
-        alert('no internet');
+        this.errorHandler.handleError(err, 999);
         return;
       }
+
+      //https://www.npmjs.com/package/http-status-codes
 
       // HttpErrorResponse - error from a service call
       if (err instanceof HttpErrorResponse) {
         // do error handling here
-        alert('test request');
+        this.errorHandler.handleError(err, err.status);
+        return;
       } else {
         // Internal Angular error such as:
         //
