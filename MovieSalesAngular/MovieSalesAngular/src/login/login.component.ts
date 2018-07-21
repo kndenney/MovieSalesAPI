@@ -37,7 +37,7 @@ export class LoginComponent implements OnInit {
                     alert('test');
                     console.log(data);
                     this.router.navigate([this.returnUrl]);
-                },
+                }); /*,
                 error => {
 
                     this.error = error;
@@ -47,6 +47,6 @@ export class LoginComponent implements OnInit {
                     //error.callback=()=>this.items.splice(index, 0, item);
                     //error.callback?error.callback():window.location.reload;
                     throw error;
-                });
+                });*/
     }
 }

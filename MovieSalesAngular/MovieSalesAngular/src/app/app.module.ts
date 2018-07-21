@@ -20,15 +20,16 @@ import { AuthGuard } from '../shared/authorization/auth.guard';
 import { AuthorizationService } from '../shared/authorization/services/authorization.service';
 import { TokenRequest } from '../shared/authorization/models/tokenrequest';
 import { TokenResponse } from '../shared/authorization/models/tokenresponse';
-import { MaterialModule } from './material.module';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MaterialModule } from '../modules/material.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FlexLayoutModule, BREAKPOINT} from '@angular/flex-layout';
-import { ErrorsHandler } from '../shared/error/error-handler';
+import { ErrorHandlers } from './error-handler';
 import { ServerErrorsInterceptor } from '../shared/error/interceptors/server.error.interceptor';
-import { NotificationService } from '../shared/error/services/notification.service';
+import { NotificationService } from '../shared/notification/services/notification.service';
 import { ErrorsService } from '../shared/error/services/error.service';
 import { HttpService } from '../shared/error/services/http.service';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RequestInterceptor } from './request-interceptor';
 
 @NgModule({
   declarations: [
@@ -37,13 +38,12 @@ import { HttpService } from '../shared/error/services/http.service';
     HomeComponent,
     CounterComponent,
     FetchDataComponent,
-    LoginComponent,
     ErrorComponent
   ],
   imports: [
     BrowserModule,
-    HttpClientModule,
     BrowserAnimationsModule,
+    HttpClientModule,
     FormsModule,
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full' },
@@ -51,6 +51,7 @@ import { HttpService } from '../shared/error/services/http.service';
       { path: 'fetch-data', component: FetchDataComponent },
       { path: 'home', component: HomeComponent },
       { path: 'error', component: ErrorComponent },
+      { path: 'notonline', component: ErrorComponent },
       {
         path: 'login',
         loadChildren: '../modules/login.module#LoginModule'
@@ -63,11 +64,10 @@ import { HttpService } from '../shared/error/services/http.service';
   providers: [
     AuthGuard,
     AuthorizationService,
-    //These could probably be put into a error module?
+    // These could probably be put into a error module?
     NotificationService,
     ErrorsService,
     HttpService,
-    
     TokenRequest,
     TokenResponse,
     {
@@ -77,12 +77,12 @@ import { HttpService } from '../shared/error/services/http.service';
     },
     {
       provide: HTTP_INTERCEPTORS,
-      useClass: ServerErrorsInterceptor,
+      useClass: RequestInterceptor, // ServerErrorsInterceptor,
       multi: true,
     },
     {
-      provide: ErrorHandler,
-      useClass: ErrorsHandler,
+      provide: ErrorHandlers,
+      useClass: ErrorHandlers,
     }
   ],
   bootstrap: [AppComponent]

@@ -1,5 +1,5 @@
-export class Errors {
-    data: Error[];
+export class ApplicationErrors {
+    data: ApplicationError[];
     message: Message[];
 }
 
@@ -9,7 +9,7 @@ export interface Message {
     Path: string;
 }
 
-export interface Error {
+export interface ApplicationError {
     error: string;
 }
 

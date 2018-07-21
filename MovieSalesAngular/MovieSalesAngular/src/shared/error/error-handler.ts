@@ -2,11 +2,12 @@
 // See - https://medium.com/@aleixsuau/error-handling-angular-859d529fa53a
 // https://medium.com/@aleixsuau/error-handling-angular-859d529fa53a
 import { Router } from '@angular/router';
-import { ErrorHandler, Injectable, Injector} from '@angular/core';
+import { ErrorHandler, Injectable, Injector, NgZone} from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Error, Errors } from './models/error';
-import { ErrorsService } from '../error/services/error.service';
-import { NotificationService } from '../error/services/notification.service';
+import { ApplicationError, ApplicationErrors } from './models/application-error';
+import { ErrorsService } from './services/error.service';
+import { NotificationService } from '../notification/services/notification.service';
+import { StatusCodes } from './StatusCodes';
 
 @Injectable()
 export class ErrorsHandler implements ErrorHandler {
@@ -17,51 +18,60 @@ export class ErrorsHandler implements ErrorHandler {
 constructor(
     // Because the ErrorHandler is created before the providers, we’ll have to use the Injector to get them.
     private injector: Injector,
+    private zone: NgZone,
+    private statusCodes: StatusCodes
 ) { }
+
+//https://stackoverflow.com/questions/45623417/angular-doesnt-see-the-injected-service
 
     public handleError(error: Error | HttpErrorResponse) {
         const notificationService = this.injector.get(NotificationService);
         const errorsService = this.injector.get(ErrorsService);
         const router = this.injector.get(Router);
 
-        const err = new Errors();
-        err.data = error.error;
-
+        const err = new ApplicationErrors();
+       
         if (error instanceof HttpErrorResponse) {
-
-            err.message[0].Code = error.status.toString();
-            err.message[0].Message = error.statusText;
-            err.message[0].Path = error.url;
 
             // Server or connection error happened
             if (!navigator.onLine) {
                 // Handle offline error
                 // Perhaps redirect to some generic
                 // Not online page?
+
+                /*errorsService
+                .log(error)
+                .subscribe(errorWithContextInfo => {
+                    this.zone.run(() => router.navigate(['/notonline']));
+                });*/
+
                 return notificationService.notify('No Internet Connection');
             } else {
 
             // Handle Http Error (error.status === 403, 404...)
-             /*   let httpErrorCode = error.status;
+                const httpErrorCode = error.status;
                 switch (httpErrorCode) {
-                case UNAUTHORIZED:
-                    this.router.navigateByUrl("/login");
+                case 401:
+                    this.zone.run(() => router.navigate(['/login']));
                     break;
-                case FORBIDDEN:
-                    this.router.navigateByUrl("/unauthorized");
+                case 403:
+                    this.zone.run(() => router.navigate(['/login']));
                     break;
-                case BAD_REQUEST:
-                    this.showError(error.message);
+                case 500:
+                    this.zone.run(() => router.navigate(['/error']));
                     break;
                 default:
-                    this.showError(REFRESH_PAGE_ON_TOAST_CLICK_MESSAGE);
-                }*/
+                    break; // this.zone.run(() => router.navigate(['/error']));
+                }
 
                  // Http Error
       // Send the error to the server
-                errorsService
+               /* errorsService
                     .log(error)
-                    .subscribe();
+                    .subscribe(errorWithContextInfo => {
+                       // router.navigate(['/error']); // { queryParams: errorWithContextInfo });
+                        this.zone.run(() => router.navigate(['/error']));
+                    });*/
 
                 return notificationService.notify(`${error.status} - ${error.message}`);
             }
@@ -72,20 +82,10 @@ constructor(
             errorsService
                 .log(error)
                 .subscribe(errorWithContextInfo => {
-                    router.navigate(['/error'], { queryParams: errorWithContextInfo });
+                   // router.navigate(['/error'], { queryParams: errorWithContextInfo });
+                    this.zone.run(() => router.navigate(['/error']));
+                   
                 });
         }
-      }
-
-      private showError(message: string) {
-      /*  this.toastManager.error(message, DEFAULT_ERROR_TITLE, { dismiss: 'controlled'}).then((toast:Toast)=>{
-                let currentToastId:number = toast.id;
-                this.toastManager.onClickToast().subscribe(clickedToast => {
-                    if (clickedToast.id === currentToastId) {
-                        this.toastManager.dismissToast(toast);
-                        window.location.reload();
-                    }
-                });
-            });*/
       }
 }

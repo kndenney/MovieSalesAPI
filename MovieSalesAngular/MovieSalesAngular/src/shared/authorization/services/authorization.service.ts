@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { map } from "rxjs/operators";
+import { map } from 'rxjs/operators';
 import { Observable, Subject, asapScheduler, pipe, of, from, interval, merge, fromEvent } from 'rxjs';
 import { TokenRequest } from '../models/tokenrequest';
 import { TokenResponse } from '../models/tokenresponse';
@@ -18,11 +18,10 @@ export class AuthorizationService {
     public _tokenRequest: TokenRequest;
     public _tokenResponse: TokenResponse;
 
-    constructor( 
-        private http:HttpClient, 
+    constructor(
+        private http:HttpClient,
         private tokenRequest: TokenRequest,
-        private tokenResponse: TokenResponse ) 
-    {
+        private tokenResponse: TokenResponse ) {
         this._tokenRequest = tokenRequest;
         this._tokenResponse = tokenResponse;
     }

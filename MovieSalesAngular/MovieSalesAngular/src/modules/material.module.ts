@@ -1,7 +1,4 @@
-import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-//Angular Material Components
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatCheckboxModule} from '@angular/material';
 import {MatButtonModule} from '@angular/material';
 import {MatInputModule} from '@angular/material/input';
@@ -32,13 +29,14 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatTableModule} from '@angular/material/table';
 import {MatSortModule} from '@angular/material/sort';
 import {MatPaginatorModule} from '@angular/material/paginator';
+import { CommonModule } from '@angular/common';
 
 
 @NgModule({
   declarations: [
   ],
   imports: [
-    BrowserAnimationsModule,
+    CommonModule,
     MatCheckboxModule,
     MatCheckboxModule,
     MatButtonModule,
@@ -73,7 +71,7 @@ import {MatPaginatorModule} from '@angular/material/paginator';
 
   ],
   exports: [
-    BrowserAnimationsModule,
+    CommonModule,
     MatCheckboxModule,
     MatCheckboxModule,
     MatButtonModule,

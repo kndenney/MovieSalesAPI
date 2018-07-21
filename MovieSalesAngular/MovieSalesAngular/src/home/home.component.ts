@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { HttpService } from '../shared/error/services/http.service';
-import { NotificationService } from '../shared/error/services/notification.service';
+import { NotificationService } from '../shared/notification/services/notification.service';
 
 @Component({
   selector: 'app-home',

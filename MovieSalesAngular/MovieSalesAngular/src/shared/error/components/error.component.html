@@ -1,8 +1,41 @@
 <div class="error-container">
-    <div *ngIf="routeParams?.error">
-        <h1>ERROR {{ routeParams?.error }}</h1>
-        <a mat-raised-button [routerLink]="'/'">
-        <h5>Go to Home</h5>
-        </a>
-    </div>
+
+        <div *ngIf="data">
+          <h1>ERROR {{ data?.name}}</h1>
+          <h5 *ngIf="data?.error === 404">Not found :(</h5>
+          <a mat-raised-button [routerLink]="'/'">
+            <h5>Go Home</h5>
+          </a>
+        </div>
+      
+        <div *ngIf="data.message">
+          <h1 *ngIf="data?.status"> ERROR {{ data?.status }}</h1><br/>
+          <h3 *ngIf="data?.message">{{ data?.message }}</h3><br/>
+          <h1 *ngIf="data?.url && routeParams?.url !== '/'">Error in {{ data?.url | uppercase }} page, sorry {{ data?.user }} :(</h1>
+          <h4 *ngIf="data?.id">This error has been reported to the Administrator with the ID:<br> {{ data?.id}}</h4>
+          <a mat-raised-button
+            [routerLink]="data?.url"
+            *ngIf="data?.url && data.status !== '404'">
+              <h5>Go Back to {{data?.url}}</h5>
+          </a>
+          <a mat-raised-button
+             routerLink="/"
+             *ngIf="!data.url || data.status === '404'">
+              <h5>Go Back to home</h5>
+          </a>
+        </div>
+      
+        <div *ngIf="!data">
+            <h1>Unknown error, sorry :(</h1>
+            <a mat-raised-button [routerLink]="'/login'">
+              <h5>Go Home</h5>
+            </a>
+        </div>
+</div>
+      
+<div class="pre-container" *ngIf="data?.message">
+  <p>Error sent to the server</p>
+  <pre>
+    {{ this.data | json }}
+  </pre>
 </div>
