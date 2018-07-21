@@ -28,6 +28,8 @@ namespace MovieSalesAPILogic.Authorization
 
         public List<ITokenResponse> CreateToken(ITokenRequest request)
         {
+            TokenResponse response = new TokenResponse();
+
             //The username and password would be pulled either from a secure server
             //or database in our class library codebase or some other DAL
             if (Authorize(request))
@@ -78,7 +80,7 @@ namespace MovieSalesAPILogic.Authorization
 
                 DateTime tokenExpirationTime = DateTime.Now.AddMinutes(Convert.ToInt32(_configuration["JWTExpirationLengthInMinutes"]));
 
-                TokenResponse response = new TokenResponse();
+                response = new TokenResponse();
                 response.Token = new JwtSecurityTokenHandler().WriteToken(
                     new JwtSecurityToken(
                     issuer: "Issuer",
@@ -91,14 +93,12 @@ namespace MovieSalesAPILogic.Authorization
 
                 response.expiration = tokenExpirationTime;
                 response.Username = request.Username;
-
-                List<ITokenResponse> tokenList = new List<ITokenResponse>();
-                tokenList.Add(response);
-
-                return tokenList;
             }
 
-            return null;
+            List<ITokenResponse> tokenList = new List<ITokenResponse>();
+            tokenList.Add(response);
+
+            return tokenList;
         }
 
 

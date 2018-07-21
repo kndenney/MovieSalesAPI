@@ -11,6 +11,7 @@ import { HomeComponent } from '../home/home.component';
 import { CounterComponent } from '../counter/counter.component';
 import { FetchDataComponent } from '../fetch-data/fetch-data.component';
 import { ErrorComponent } from '../shared/error/components/error.component';
+import { MoviesComponent } from '../movies/movies.component';
 
 // JSON Web Token Interceptor to add Authorization header to HTTP calls
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -19,7 +20,7 @@ import { LoginComponent } from '../login/login.component';
 import { AuthGuard } from '../shared/authorization/auth.guard';
 import { AuthorizationService } from '../shared/authorization/services/authorization.service';
 import { TokenRequest } from '../shared/authorization/models/tokenrequest';
-import { TokenResponse } from '../shared/authorization/models/tokenresponse';
+import { TokenResponse, TokenResponses } from '../shared/authorization/models/tokenresponse';
 import { MaterialModule } from '../modules/material.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FlexLayoutModule, BREAKPOINT} from '@angular/flex-layout';
@@ -38,7 +39,8 @@ import { RequestInterceptor } from './request-interceptor';
     HomeComponent,
     CounterComponent,
     FetchDataComponent,
-    ErrorComponent
+    ErrorComponent,
+    MoviesComponent
   ],
   imports: [
     BrowserModule,
@@ -52,6 +54,7 @@ import { RequestInterceptor } from './request-interceptor';
       { path: 'home', component: HomeComponent },
       { path: 'error', component: ErrorComponent },
       { path: 'notonline', component: ErrorComponent },
+      { path: 'movies', component: MoviesComponent, canActivate: [AuthGuard] },
       {
         path: 'login',
         loadChildren: '../modules/login.module#LoginModule'
@@ -69,7 +72,7 @@ import { RequestInterceptor } from './request-interceptor';
     ErrorsService,
     HttpService,
     TokenRequest,
-    TokenResponse,
+    TokenResponses,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptor,
