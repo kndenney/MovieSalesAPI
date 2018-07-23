@@ -59,7 +59,7 @@ export class LoginComponent implements OnInit {
                                 panelClass: ['green-snackbar']
                             },
                         );
-                       
+
                         this.zone.run(() => this.router.navigate(['/movies']));
                     }
                     console.log(response);

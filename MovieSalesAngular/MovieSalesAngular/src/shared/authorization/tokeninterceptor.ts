@@ -11,8 +11,8 @@ export class TokenInterceptor implements HttpInterceptor {
         //2. they are hitting the app for the first time
         //3. their localStorage cache is cleared
         //4. they are not authorized
-        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        if (currentUser && currentUser.token) {
+        const currentUser = JSON.parse(localStorage.getItem('currentUserToken'));
+        if (currentUser) {
             request = request.clone({
                 setHeaders: {
                     Authorization: `Bearer ${currentUser.token}`

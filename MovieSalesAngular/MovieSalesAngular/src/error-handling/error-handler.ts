@@ -14,13 +14,7 @@ export class ErrorHandlers {
     // Figure out what kind of error you now have
     // and format your message accordingly
     // and how you want to display under what conditions you want to display
-    // what etc.
-
-//We need to figure out when we want to redirect to an error page:
-
-//maybe under the 500 error scenarios.... but others can be snackbar?
-//or if the status comes back 0 (unkonwn or something like that)
-//then redirect?
+    // or to choose to re-route to different URL etc.
 
     let message: string;
 

@@ -12,8 +12,9 @@ import { tap } from 'rxjs/operators';
 import { ErrorHandlers } from './error-handler';
 
 // https://hackernoon.com/global-http-error-catching-in-angular-4-3-9e15cc1e0a6b
+
 @Injectable()
-export class RequestInterceptor implements HttpInterceptor {
+export class ErrorInterceptor implements HttpInterceptor {
   constructor(
     public errorHandler: ErrorHandlers,
   ) {}
@@ -23,7 +24,7 @@ export class RequestInterceptor implements HttpInterceptor {
     // Go here for an example:
     // https://hackernoon.com/global-http-error-catching-in-angular-4-3-9e15cc1e0a6b
     // It is older but this below code is the new RxJs 6 example for Angular 6
-    
+
     return next.handle(request).pipe(tap((event: HttpEvent<any>) => {}, (err: any) => {
       if (!navigator.onLine) {
         // No Internet connection
@@ -31,7 +32,7 @@ export class RequestInterceptor implements HttpInterceptor {
         return;
       }
 
-      //https://www.npmjs.com/package/http-status-codes
+      // https://www.npmjs.com/package/http-status-codes
 
       // HttpErrorResponse - error from a service call
       if (err instanceof HttpErrorResponse) {

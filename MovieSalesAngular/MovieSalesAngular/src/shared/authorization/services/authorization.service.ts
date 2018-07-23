@@ -63,7 +63,7 @@ export class AuthorizationService {
                 // login successful if there's a jwt token in the response
                 if (response && (response.data[0].token != null)) {
                     // store user details and jwt token in local storage to keep user logged in between page refreshes
-                    localStorage.setItem('currentUser', JSON.stringify(response.data[0].token));
+                    localStorage.setItem('currentUserToken', JSON.stringify(response.data[0].token));
                     localStorage.setItem('currentUserExpiration', JSON.stringify(response.data[0].expiration));
                 }
 
@@ -73,13 +73,13 @@ export class AuthorizationService {
 
     logout() {
         // remove user from local storage to log user out
-        localStorage.removeItem('currentUser');
+        localStorage.removeItem('currentUserToken');
     }
 
     getToken() {
-        return localStorage.getItem('currentUser');
+        return localStorage.getItem('currentUserToken');
     }
-    
+
     isTokenExpired(token?: string): boolean {
 
         if (!token) {
@@ -90,6 +90,9 @@ export class AuthorizationService {
             return true;
         }
 
+        // Retrieve the users JWT token expiration time
+        // and check to see if the date JWT expires is greater
+        // than the current time
         const date = new Date(localStorage.getItem('currentUserExpiration')); // this.getTokenExpirationDate(token);
         if (date === undefined) {
             return false;

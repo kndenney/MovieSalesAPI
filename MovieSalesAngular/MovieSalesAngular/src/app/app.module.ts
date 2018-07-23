@@ -7,10 +7,8 @@ import { RouterModule } from '@angular/router';
 // Components
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from '../nav-menu/nav-menu.component';
-import { HomeComponent } from '../home/home.component';
 import { CounterComponent } from '../counter/counter.component';
 import { FetchDataComponent } from '../fetch-data/fetch-data.component';
-import { ErrorComponent } from '../shared/error/components/error.component';
 import { MoviesComponent } from '../movies/movies.component';
 
 // JSON Web Token Interceptor to add Authorization header to HTTP calls
@@ -24,22 +22,16 @@ import { TokenResponse, TokenResponses } from '../shared/authorization/models/to
 import { MaterialModule } from '../modules/material.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FlexLayoutModule, BREAKPOINT} from '@angular/flex-layout';
-import { ErrorHandlers } from './error-handler';
-import { ServerErrorsInterceptor } from '../shared/error/interceptors/server.error.interceptor';
-import { NotificationService } from '../shared/notification/services/notification.service';
-import { ErrorsService } from '../shared/error/services/error.service';
-import { HttpService } from '../shared/error/services/http.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { RequestInterceptor } from './request-interceptor';
+import { ErrorInterceptor } from '../error-handling/error-interceptor';
+import { ErrorHandlers } from '../error-handling/error-handler';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavMenuComponent,
-    HomeComponent,
     CounterComponent,
     FetchDataComponent,
-    ErrorComponent,
     MoviesComponent
   ],
   imports: [
@@ -48,12 +40,9 @@ import { RequestInterceptor } from './request-interceptor';
     HttpClientModule,
     FormsModule,
     RouterModule.forRoot([
-      { path: '', component: HomeComponent, pathMatch: 'full' },
+     // { path: '', component: HomeComponent, pathMatch: 'full' },
       { path: 'counter', component: CounterComponent },
       { path: 'fetch-data', component: FetchDataComponent },
-      { path: 'home', component: HomeComponent },
-      { path: 'error', component: ErrorComponent },
-      { path: 'notonline', component: ErrorComponent },
       { path: 'movies', component: MoviesComponent, canActivate: [AuthGuard] },
       {
         path: 'login',
@@ -67,12 +56,9 @@ import { RequestInterceptor } from './request-interceptor';
   providers: [
     AuthGuard,
     AuthorizationService,
-    // These could probably be put into a error module?
-    NotificationService,
-    ErrorsService,
-    HttpService,
     TokenRequest,
     TokenResponses,
+    ErrorHandlers,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptor,
@@ -80,12 +66,8 @@ import { RequestInterceptor } from './request-interceptor';
     },
     {
       provide: HTTP_INTERCEPTORS,
-      useClass: RequestInterceptor, // ServerErrorsInterceptor,
+      useClass: ErrorInterceptor,
       multi: true,
-    },
-    {
-      provide: ErrorHandlers,
-      useClass: ErrorHandlers,
     }
   ],
   bootstrap: [AppComponent]
