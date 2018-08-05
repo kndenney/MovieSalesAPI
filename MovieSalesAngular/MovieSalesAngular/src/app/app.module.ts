@@ -25,6 +25,7 @@ import { FlexLayoutModule, BREAKPOINT} from '@angular/flex-layout';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ErrorInterceptor } from '../error-handling/error-interceptor';
 import { ErrorHandlers } from '../error-handling/error-handler';
+import { MoviesService } from '../movies/services/movies.service';
 
 @NgModule({
   declarations: [
@@ -48,6 +49,10 @@ import { ErrorHandlers } from '../error-handling/error-handler';
         path: 'login',
         loadChildren: '../modules/login.module#LoginModule'
       },
+      {
+        path: 'create',
+        loadChildren: '../modules/create-account.module#CreateAccountModule'
+      },
     ]),
     MaterialModule,
     NgbModule.forRoot(),
@@ -56,6 +61,7 @@ import { ErrorHandlers } from '../error-handling/error-handler';
   providers: [
     AuthGuard,
     AuthorizationService,
+    MoviesService,
     TokenRequest,
     TokenResponses,
     ErrorHandlers,

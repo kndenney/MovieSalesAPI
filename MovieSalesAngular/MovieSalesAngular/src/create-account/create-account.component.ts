@@ -1,15 +1,14 @@
 import { Component, OnInit, NgZone } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-
-import { AuthorizationService } from '../shared/authorization/services/authorization.service';
 import { MatSnackBar } from '@angular/material';
+import { CreateAccountService } from './services/create-account.services';
 
 @Component({
-    templateUrl: 'login.component.html',
-    styleUrls: ['login.component.css']
+    templateUrl: 'create-account.component.html',
+    styleUrls: ['create-account.component.css']
 })
 
-export class LoginComponent implements OnInit {
+export class CreateAccountComponent implements OnInit {
     model: any = {};
     loading = false;
     returnUrl: string;
@@ -18,34 +17,31 @@ export class LoginComponent implements OnInit {
     constructor(
         private route: ActivatedRoute,
         private router: Router,
-        private authorizationService: AuthorizationService,
+        private createAccountService: CreateAccountService,
         private zone: NgZone,
         public snackbar: MatSnackBar
     ) { }
 
     ngOnInit() {
-        // reset login status
-        this.authorizationService.logout();
-
         // get return url from route parameters or default to '/'
         this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
     }
 
-    login() {
+    createAccount() {
         // let index = 0; //This would be some index of some database call or something like that this.items.indexOf(item);
         this.loading = true;
 
         localStorage.setItem('username', this.model.username);
 
-        this.authorizationService.login(this.model.username, this.model.password)
+        this.createAccountService.createUserAccount(this.model.username, this.model.password)
             .subscribe(
                 response => {
 
                     if (response.data[0].token == null) {
-                        // Invalid login - let the user know
+                        // Invalid account creation - let the user know
                         this.snackbar.open
                         (
-                            'Invalid username or password. Please try again.', '',
+                            'Account not created. Please try again.', '',
                             {
                                 duration: 2000,
                                 panelClass: ['red-snackbar']
@@ -56,14 +52,14 @@ export class LoginComponent implements OnInit {
                         // and that should have the token for future request usage
                         this.snackbar.open
                         (
-                            'Hello!', '',
+                            'Account Created!', '',
                             {
                                 duration: 500,
                                 panelClass: ['green-snackbar']
                             },
                         );
 
-                        this.zone.run(() => this.router.navigate(['/movies']));
+                        this.zone.run(() => this.router.navigate(['/login']));
                     }
                     console.log(response);
 

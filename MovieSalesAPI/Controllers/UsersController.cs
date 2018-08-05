@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using MovieSalesAPI.Data.User;
 using MovieSalesAPILogic;
 using MovieSalesAPILogic.Authorization;
 
@@ -18,19 +19,23 @@ namespace MovieSalesAPI.Controllers
     /// <summary>
     /// Authenticate and authorize users to the movies API and data.
     /// </summary>
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class UsersController : ControllerBase
     {
         private readonly IConfiguration _configuration;
+        private IUserData _userData;
 
         /// <summary>
         /// Controller that authorizes a JWT token for users
         /// </summary>
         /// <param name="configuration"></param>
-        public UsersController(IConfiguration configuration)
+        public UsersController(
+            IConfiguration configuration,
+            IUserData userData)
         {
             _configuration = configuration;
+            _userData = userData;
         }
 
         //https://jonhilton.net/2017/10/11/secure-your-asp.net-core-2.0-api-part-1---issuing-a-jwt/
@@ -38,15 +43,29 @@ namespace MovieSalesAPI.Controllers
 
         // POST: api/Authorize
         /// <summary>
-        /// 
+        /// Create a JWT token for the user
         /// </summary>
         /// <param name="request">Token Request posted in the form of Username and Password</param>
-        [Route("create/token")]
+        [Route("token")]
         [AllowAnonymous]
         [HttpPost]
-        public List<ITokenResponse> CreateToken([FromBody] TokenRequest request)
+        public IEnumerable<ITokenResponse> CreateToken([FromBody] TokenRequest request)
         {
             return new MovieSalesAPILogic.Authorization.Token(_configuration).CreateToken(request);
         }
+
+        /// <summary>
+        /// Create a new user
+        /// </summary>
+        /// <param name="request">User Request posted in the form of Username and Password</param>
+        [Route("users")]
+        [AllowAnonymous]
+        [HttpPost]
+        public IEnumerable<IUser> CreateUserAccount([FromBody] User request)
+        {
+            return _userData.CreateUserAccount(request);
+        }
+
+
     }
 }

@@ -52,9 +52,9 @@ export class AuthorizationService {
        // requestOption.params = parameters;
        // ('Content-Type', 'application-json');
         requestOption.headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
-        const baseUrl = 'https://localhost:44368';
+        const baseUrl = 'https://localhost:44368/';
 
-        return this.http.post<any>(baseUrl + '/api/users/create/token', this._tokenRequest) 
+        return this.http.post<any>(baseUrl + 'users/token', this._tokenRequest)
         // , requestOption) // JSON.stringify(this._tokenRequest), requestOption)
             .pipe(map(user => {
 

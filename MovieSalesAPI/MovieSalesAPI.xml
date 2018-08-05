@@ -15,7 +15,7 @@
             </summary>
             <param name="movieData"></param>
         </member>
-        <member name="M:MovieSalesAPI.Controllers.MoviesController.GetAllUsersMovieDetails">
+        <member name="M:MovieSalesAPI.Controllers.MoviesController.GetUsersMovies">
             <summary>
             Retrieve all movie details
             </summary>
@@ -113,7 +113,7 @@
             Model class for movie details
             </summary>
         </member>
-        <member name="M:MovieSalesAPI.Data.MovieData.GetAllMovieDetails(System.String)">
+        <member name="M:MovieSalesAPI.Data.MovieData.GetUsersMovies(System.String)">
             <summary>
             Retrieve all the users movies
             </summary>

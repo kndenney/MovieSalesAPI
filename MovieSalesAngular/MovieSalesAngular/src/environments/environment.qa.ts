@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  baseUrl: 'https://localhost:44368/api/'
+  // baseUrl = 'https://www.qatest.com/api/';
 };
 
 /*

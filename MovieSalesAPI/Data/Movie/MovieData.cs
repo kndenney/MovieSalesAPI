@@ -1,5 +1,7 @@
 ﻿using Dapper;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Options;
+using MovieSalesAPI.Shared;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -19,12 +21,16 @@ namespace MovieSalesAPI.Data
         //and so you can set a cache because throughout a single day
         //the data will be the same until the next day after midnight, in this example
         private TimeSpan untilMidnight = DateTime.Today.AddDays(1) - DateTime.Now;
+        private string connectionString = "";
+        private IOptions<Configuration> _config;
 
         public MovieData(
-          IMemoryCache memoryCache
+          IMemoryCache memoryCache,
+          IOptions<Configuration> config
         )
         {
             _memoryCache = memoryCache;
+            _config = config;
         }
 
         //Example of Http REST Web API:
@@ -38,7 +44,7 @@ namespace MovieSalesAPI.Data
         /// </summary>
         /// <param name="username"></param>
         /// <returns>Return a list of all movies for the user.</returns>
-        public List<IMovie> GetAllMovieDetails
+        public IEnumerable<IMovie> GetUsersMovies
         (
             string username
         )
@@ -48,20 +54,20 @@ namespace MovieSalesAPI.Data
                 CacheName = "Movies" + username;
 
                 //If the cache exists return it
-                if (_memoryCache.TryGetValue(CacheName, out List<IMovie> movies))
+                if (_memoryCache.TryGetValue(CacheName, out IEnumerable<IMovie> movies))
                 {
                     return movies;
                 }
 
                 //Retrieve the movies from the database based on the username
                 //of the JWT token username
-                using (var connection = new SqlConnection("test"))
+                using (var connection = new SqlConnection(_config.Value.ConnectionString))
                 {
                     DynamicParameters parameters = new DynamicParameters();
 
                     parameters.Add("@user", dbType: DbType.AnsiString, value: username, direction: ParameterDirection.Input);
 
-                    var results = connection.Query<IMovie>("sprocName", parameters, commandType: CommandType.StoredProcedure);
+                    var results = connection.Query<Movie>("RetrieveUsersMovies", parameters, commandType: CommandType.StoredProcedure);
 
                     //The cache was empty therefore set a new cache object
                     _memoryCache.Set(
@@ -75,7 +81,7 @@ namespace MovieSalesAPI.Data
                         )
                     );
 
-                    return results.ToList();
+                    return results;
                 }
             }
             catch (Exception ex)
@@ -90,7 +96,7 @@ namespace MovieSalesAPI.Data
         /// <param name="movieid"></param>
         /// <param name="username"></param>
         /// <returns>Return a movie</returns>
-        public List<IMovie> GetSpecificMovieDetailsById
+        public IEnumerable<IMovie> GetSpecificMovieDetailsById
         (
             int movieid,
             string username
@@ -101,7 +107,7 @@ namespace MovieSalesAPI.Data
                 CacheName = "Movies" + username;
 
                 //If the cache exists return it
-                if (_memoryCache.TryGetValue(CacheName, out List<IMovie> movies))
+                if (_memoryCache.TryGetValue(CacheName, out IList<IMovie> movies))
                 {
                     return movies;
                 }
@@ -114,7 +120,7 @@ namespace MovieSalesAPI.Data
 
                     parameters.Add("@user", dbType: DbType.AnsiString, value: username, direction: ParameterDirection.Input);
 
-                    var results = connection.Query<IMovie>("sprocName", parameters, commandType: CommandType.StoredProcedure);
+                    var results = connection.Query<Movie>("sprocName", parameters, commandType: CommandType.StoredProcedure);
 
                     //The cache was empty therefore set a new cache object
                     _memoryCache.Set(
@@ -143,7 +149,7 @@ namespace MovieSalesAPI.Data
         /// <param name="moviename"></param>
         /// <param name="username"></param>
         /// <returns>Return a movie</returns>
-        public List<IMovie> GetSpecificMovieDetailsByName
+        public IEnumerable<IMovie> GetSpecificMovieDetailsByName
         (
             string moviename,
             string username
@@ -154,7 +160,7 @@ namespace MovieSalesAPI.Data
                 CacheName = "Movies" + username;
 
                 //If the cache exists return it
-                if (_memoryCache.TryGetValue(CacheName, out List<IMovie> movies))
+                if (_memoryCache.TryGetValue(CacheName, out IEnumerable<IMovie> movies))
                 {
                     return movies;
                 }
@@ -201,7 +207,7 @@ namespace MovieSalesAPI.Data
         /// <param name="movie"></param>
         /// <param name="username"></param>
         /// <returns>Return the movie saved</returns>
-        public List<IMovie> SaveMovieToDatabase
+        public IEnumerable<IMovie> SaveMovieToDatabase
         (
             IMovie movie,
             string username
@@ -217,7 +223,7 @@ namespace MovieSalesAPI.Data
         /// <param name="movie"></param>
         /// <param name="username"></param>
         /// <returns>Return movie that was updated</returns>
-        public List<IMovie> UpdateMovieInDatabase
+        public IEnumerable<IMovie> UpdateMovieInDatabase
         (
             int id,
             IMovie movie,
@@ -233,31 +239,31 @@ namespace MovieSalesAPI.Data
 
     public interface IMovieData
     {
-        List<IMovie> GetAllMovieDetails
+        IEnumerable<IMovie> GetUsersMovies
         (
             string username
         );
 
-        List<IMovie> GetSpecificMovieDetailsById
+        IEnumerable<IMovie> GetSpecificMovieDetailsById
         (
             int movieid,
             string username
         );
 
-        List<IMovie> GetSpecificMovieDetailsByName
+        IEnumerable<IMovie> GetSpecificMovieDetailsByName
         (
             string moviename,
             string username
         );
 
 
-        List<IMovie> SaveMovieToDatabase
+        IEnumerable<IMovie> SaveMovieToDatabase
         (
            IMovie movie,
            string username
         );
 
-        List<IMovie> UpdateMovieInDatabase
+        IEnumerable<IMovie> UpdateMovieInDatabase
         (
             int id,
             IMovie movie,

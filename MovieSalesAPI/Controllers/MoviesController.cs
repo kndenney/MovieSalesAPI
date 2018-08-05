@@ -36,6 +36,23 @@ namespace MovieSalesAPI.Controllers
             _movieData = movieData;
         }
 
+        ///We may want to independently update a movie, that does not belong to a specific user
+        ///The updates to the name of the movie, MPAA rating etc
+        ///should be independent of the user that the movie belongs
+        ///for instance, two users with the same movie shouldn't have differnt MPAA ratings
+        ///or different descriptions for the same movie id etc.
+        #region MOVIE ACTIONS - NOT SPECIFIC TO A USER
+
+            //We should be able to:
+            //Add a new movie by itself
+            //Update a movie by itself
+            //Patch a movie by itself
+            //Delete a movie (mark it inactive - meaning take it from the available movies for purchase)
+            //but it does not delete the movie entirely from the database; just sets a flag called 'available' to 0 or 1
+            //etc.
+           
+        #endregion
+
         #region USERS API ACTIONS
 
         // GET: api/Movie
@@ -45,8 +62,8 @@ namespace MovieSalesAPI.Controllers
         /// <returns>Returns a list of movie details.</returns>
         [Authorize(Policy = "APIMovieAccess")]
         [HttpGet]
-        [Route("users/all")]
-        public List<IMovie> GetAllUsersMovieDetails
+        [Route("users")]
+        public IEnumerable<IMovie> GetUsersMovies
         (
             // [FromHeader] string authorization
         )
@@ -54,7 +71,7 @@ namespace MovieSalesAPI.Controllers
 
             //Access the Claim.Name value
             //var userName = User.Identity.Name;
-            /* List<Movie> movies = new List<Movie>
+            /* IEnumerable<Movie> movies = new IEnumerable<Movie>
              {
                  new Movie
                  {
@@ -67,7 +84,7 @@ namespace MovieSalesAPI.Controllers
 
             if (User.Identity.IsAuthenticated)
             {
-                return _movieData.GetAllMovieDetails(User.Identity.Name);
+                return _movieData.GetUsersMovies(User.Identity.Name);
             }
             else
             {
@@ -83,8 +100,8 @@ namespace MovieSalesAPI.Controllers
         /// <returns>Return a movie</returns>
         [Authorize(Policy = "APIMovieAccess")]
         [HttpGet]
-        [Route("users/{movieid}")]
-        public List<IMovie> GetSpecificMovieDetailsById([FromRoute] int movieid)
+        [Route("{movieid}")]
+        public IEnumerable<IMovie> GetSpecificMovieDetailsById([FromRoute] int movieid)
         {
             if (User.Identity.IsAuthenticated)
             {
@@ -105,8 +122,8 @@ namespace MovieSalesAPI.Controllers
         /// <returns>Return a movie</returns>
         [Authorize(Policy = "APIMovieAccess")]
         [HttpGet]
-        [Route("users/{moviename}")]
-        public List<IMovie> GetSpecificMovieDetailsByName([FromRoute] string moviename)
+        [Route("{moviename}")]
+        public IEnumerable<IMovie> GetSpecificMovieDetailsByName([FromRoute] string moviename)
         {
             if (User.Identity.IsAuthenticated)
             {
@@ -128,7 +145,7 @@ namespace MovieSalesAPI.Controllers
         [Authorize(Policy = "APIMovieAccess")]
         [HttpPost]
         [Route("movie")]
-        public List<IMovie> SaveMovieToDatabase([FromBody] IMovie movie)
+        public IEnumerable<IMovie> SaveMovieToDatabase([FromBody] IMovie movie)
         {
             return null;
         }
@@ -143,7 +160,7 @@ namespace MovieSalesAPI.Controllers
         [Authorize(Policy = "APIMovieAccess")]
         [HttpPut]
         [Route("movie/{id}")]
-        public List<IMovie> UpdateEntireMovieInDatabaseById([FromRoute] int id, [FromBody] IMovie movie)
+        public IEnumerable<IMovie> UpdateEntireMovieInDatabaseById([FromRoute] int id, [FromBody] IMovie movie)
         {
             return null;
         }
@@ -158,7 +175,7 @@ namespace MovieSalesAPI.Controllers
         [Authorize(Policy = "APIMovieAccess")]
         [HttpPut]
         [Route("movie/{moviename}")]
-        public List<IMovie> UpdateEntireMovieInDatabaseByName([FromRoute] string moviename, [FromBody] IMovie movie)
+        public IEnumerable<IMovie> UpdateEntireMovieInDatabaseByName([FromRoute] string moviename, [FromBody] IMovie movie)
         {
             return null;
         }
@@ -180,7 +197,7 @@ namespace MovieSalesAPI.Controllers
         [Authorize(Policy = "APIMovieAccess")]
         [HttpPatch]
         [Route("movie/{id}")]
-        public List<IMovie> UpdatePartialMovieInDatabaseById([FromRoute]int movieid, [FromBody]JsonPatchDocument<IMovie> moviePatch)
+        public IEnumerable<IMovie> UpdatePartialMovieInDatabaseById([FromRoute]int movieid, [FromBody]JsonPatchDocument<IMovie> moviePatch)
         {
             //The idea is that you pull: somemoviefromdatabase
             //From the database
@@ -189,10 +206,10 @@ namespace MovieSalesAPI.Controllers
             //then reutrn the newly changed somemoviefromdatabase
             //object tback to the user
 
-            List<IMovie> someMovie = _movieData.GetSpecificMovieDetailsById(movieid, User.Identity.Name);
-            moviePatch.ApplyTo(someMovie[0]);
+            IEnumerable<IMovie> someMovie = _movieData.GetSpecificMovieDetailsById(movieid, User.Identity.Name);
+            moviePatch.ApplyTo(someMovie.First());
 
-            _movieData.SaveMovieToDatabase(someMovie[0], User.Identity.Name);
+            _movieData.SaveMovieToDatabase(someMovie.First(), User.Identity.Name);
             return someMovie;
         }
 
