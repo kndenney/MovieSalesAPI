@@ -83,7 +83,7 @@
             Authenticate and authorize users to the movies API and data.
             </summary>
         </member>
-        <member name="M:MovieSalesAPI.Controllers.UsersController.#ctor(Microsoft.Extensions.Configuration.IConfiguration)">
+        <member name="M:MovieSalesAPI.Controllers.UsersController.#ctor(Microsoft.Extensions.Configuration.IConfiguration,MovieSalesAPI.Data.User.IUserData)">
             <summary>
             Controller that authorizes a JWT token for users
             </summary>
@@ -91,9 +91,15 @@
         </member>
         <member name="M:MovieSalesAPI.Controllers.UsersController.CreateToken(MovieSalesAPILogic.TokenRequest)">
             <summary>
-            
+            Create a JWT token for the user
             </summary>
             <param name="request">Token Request posted in the form of Username and Password</param>
+        </member>
+        <member name="M:MovieSalesAPI.Controllers.UsersController.CreateUserAccount(MovieSalesAPI.Data.User.User)">
+            <summary>
+            Create a new user
+            </summary>
+            <param name="request">User Request posted in the form of Username and Password</param>
         </member>
         <member name="M:MovieSalesAPI.Controllers.ValuesController.Get">
             <summary>
@@ -119,6 +125,13 @@
             </summary>
             <param name="username"></param>
             <returns>Return a list of all movies for the user.</returns>
+        </member>
+        <member name="M:MovieSalesAPI.Data.MovieData.GetAllMoviesIncludingUsers(System.String)">
+            <summary>
+            Retrieve all movies including users movies
+            </summary>
+            <param name="username"></param>
+            <returns></returns>
         </member>
         <member name="M:MovieSalesAPI.Data.MovieData.GetSpecificMovieDetailsById(System.Int32,System.String)">
             <summary>
@@ -152,6 +165,13 @@
             <param name="movie"></param>
             <param name="username"></param>
             <returns>Return movie that was updated</returns>
+        </member>
+        <member name="M:MovieSalesAPI.Data.User.UserData.CreateUserAccount(MovieSalesAPI.Data.User.IUser)">
+            <summary>
+            Create a users account
+            </summary>
+            <param name="user"></param>
+            <returns>Return the user created</returns>
         </member>
     </members>
 </doc>

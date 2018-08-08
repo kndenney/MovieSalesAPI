@@ -10,5 +10,6 @@ export class UsersMovies {
     imageurl: string;
     movielength: string;
     datepurchased: Date;
-    purchaseamount: number;
+    lastmodified: Date;
+    modifiedby: string;
 }

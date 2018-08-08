@@ -21,7 +21,7 @@ export class MoviesComponent implements OnInit {
 
     ngOnInit() {
 
-        this.moviesService.retrieveUsersMovies(
+        this.moviesService.retrieveAllMoviesIncludingUsers(
             localStorage.getItem('username')
         ).subscribe(results => {
             this.usersMovies = results;

@@ -92,6 +92,21 @@ namespace MovieSalesAPI.Controllers
             }
         }
 
+        [Authorize(Policy = "APIMovieAccess")]
+        [HttpGet]
+        [Route("all")]
+        public IEnumerable<IMovie> GetAllMoviesIncludingUsers()
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                return _movieData.GetAllMoviesIncludingUsers(User.Identity.Name);
+            }
+            else
+            {
+                return null;
+            }
+        }
+
         // GET: Movies/users/movieid
         /// <summary>
         /// Retrieve specific movie

@@ -20,7 +20,7 @@ export class MoviesService {
 
     public userMoviesSubject: Subject<any> = new Subject<any>();
 
-    public retrieveUsersMovies(
+    public retrieveAllMoviesIncludingUsers(
         username: string
     ): Observable<any> {
 
@@ -37,7 +37,7 @@ export class MoviesService {
 
         requestOption.params = parameters;
 
-        return this.http.get<UsersMovies>(baseUrl + 'movies/users', requestOption)
+        return this.http.get<UsersMovies>(baseUrl + 'movies/all', requestOption)
             .pipe(map(usersMovies => {
                 const response = <UsersMovies> usersMovies;
                 this.userMoviesSubject.next(response.moviename);

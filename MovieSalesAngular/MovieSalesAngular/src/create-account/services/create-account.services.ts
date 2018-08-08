@@ -25,7 +25,7 @@ export class CreateAccountService {
 
         const parameters = new HttpParams();
         parameters.set('@username', username);
-        parameters.set('@password', password));
+        parameters.set('@password', password);
 
 
         const requestOption = {
@@ -42,7 +42,9 @@ export class CreateAccountService {
         // the JWT because after they create their account
         // Then are then sent to the login screen to login
 
-        return this.http.get<any>(baseUrl + 'create', requestOption)
+        alert(username);
+
+        return this.http.post<any>(baseUrl + 'users', requestOption)
             .pipe(map(userAccount => {
                 const response = <any> userAccount;
                 this.createAccountSubject.next(response.moviename);

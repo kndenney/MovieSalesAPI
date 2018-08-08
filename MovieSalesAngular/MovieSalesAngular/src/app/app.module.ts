@@ -26,6 +26,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ErrorInterceptor } from '../error-handling/error-interceptor';
 import { ErrorHandlers } from '../error-handling/error-handler';
 import { MoviesService } from '../movies/services/movies.service';
+import { CreateAccountService } from '../create-account/services/create-account.services';
 
 @NgModule({
   declarations: [
@@ -62,6 +63,7 @@ import { MoviesService } from '../movies/services/movies.service';
     AuthGuard,
     AuthorizationService,
     MoviesService,
+    CreateAccountService,
     TokenRequest,
     TokenResponses,
     ErrorHandlers,

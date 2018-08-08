@@ -91,6 +91,57 @@ namespace MovieSalesAPI.Data
         }
 
         /// <summary>
+        /// Retrieve all movies including users movies
+        /// </summary>
+        /// <param name="username"></param>
+        /// <returns></returns>
+        public IEnumerable<IMovie> GetAllMoviesIncludingUsers
+        (
+            string username
+        )
+        {
+            try
+            {
+                CacheName = "AllMovies" + username;
+
+                //If the cache exists return it
+                if (_memoryCache.TryGetValue(CacheName, out IEnumerable<IMovie> movies))
+                {
+                    return movies;
+                }
+
+                //Retrieve the movies from the database based on the username
+                //of the JWT token username
+                using (var connection = new SqlConnection(_config.Value.ConnectionString))
+                {
+                    DynamicParameters parameters = new DynamicParameters();
+
+                    parameters.Add("@user", dbType: DbType.AnsiString, value: username, direction: ParameterDirection.Input);
+
+                    var results = connection.Query<Movie>("RetrieveAllMoviesIncludingUsers", parameters, commandType: CommandType.StoredProcedure);
+
+                    //The cache was empty therefore set a new cache object
+                    _memoryCache.Set(
+                        CacheName,
+                        results,
+                        new MemoryCacheEntryOptions()
+                        .SetAbsoluteExpiration(
+                            DateTimeOffset.UtcNow.AddMinutes(
+                                untilMidnight.TotalMinutes
+                            )
+                        )
+                    );
+
+                    return results;
+                }
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
         /// Retrieve a movie by id
         /// </summary>
         /// <param name="movieid"></param>
@@ -240,6 +291,11 @@ namespace MovieSalesAPI.Data
     public interface IMovieData
     {
         IEnumerable<IMovie> GetUsersMovies
+        (
+            string username
+        );
+
+        IEnumerable<IMovie> GetAllMoviesIncludingUsers
         (
             string username
         );
