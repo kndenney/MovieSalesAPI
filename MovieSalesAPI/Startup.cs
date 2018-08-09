@@ -22,12 +22,13 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using MovieSalesAPI.Data;
 using MovieSalesAPILogic;
+using MovieSalesAPI.Data.User;
 
 namespace MovieSalesAPI
 {
     public class Startup
     {
-
+        public IConfigurationRoot Configuration { get; }
         public IConfiguration _configuration;
         private string DefaultCorsPolicyName;
 
@@ -43,12 +44,22 @@ namespace MovieSalesAPI
         //   (like a subdomain etc.)
         //4. Make sure to modify the response to make sure it is consistent via the Middleware
 
-        public Startup(IConfiguration configuration)
+        public Startup(IHostingEnvironment env, IConfiguration configuration)
         {
             _configuration = configuration;
-        }
 
-        public IConfiguration Configuration { get; }
+            var builder = new ConfigurationBuilder()
+           .SetBasePath(env.ContentRootPath)
+           .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+           .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+           .AddEnvironmentVariables();
+           //This allows us to switch between API endpoints based on our environment
+           //.AddJsonFile($"somefile.{env.EnvironmentName}.json", optional: false);
+
+            Configuration = builder.Build();
+
+            Configuration = builder.Build();
+        }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -168,9 +179,21 @@ namespace MovieSalesAPI
 
             services.AddSwaggerDocumentation();
 
+            //Load our application custom configuration
+            // Add our Config object so it can be injected
+            //https://stackoverflow.com/questions/31453495/how-to-read-appsettings-values-from-config-json-in-asp-net-core
+            // Add functionality to inject IOptions<T>
+            services.AddOptions();
+
+            // Add our Config object so it can be injected
+            services.Configure<AppConfig>(Configuration);
+
+            // *If* you need access to generic IConfiguration this is **required**
+            services.AddSingleton<IConfiguration>(Configuration);
 
             //Add dependency injection for Data classes, models etc.
             services.AddTransient<IMovieData, MovieData>();
+            services.AddTransient<IUserData, UserData>();
             services.AddTransient<ITokenRequest, TokenRequest>();
 
             services.AddMvc(config =>

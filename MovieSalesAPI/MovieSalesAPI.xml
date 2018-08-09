@@ -171,7 +171,7 @@
             Create a users account
             </summary>
             <param name="user"></param>
-            <returns>Return the user created</returns>
+            <returns>Return the user</returns>
         </member>
     </members>
 </doc>

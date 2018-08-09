@@ -18,39 +18,43 @@ namespace MovieSalesAPI.Data.User
 
         private TimeSpan untilMidnight = DateTime.Today.AddDays(1) - DateTime.Now;
         private string connectionString = "";
-        private IOptions<Configuration> _config;
+        private IOptions<AppConfig> _config;
 
         public UserData(
           IMemoryCache memoryCache,
-          IOptions<Configuration> config
+          IOptions<AppConfig> config
         )
         {
             _memoryCache = memoryCache;
             _config = config;
+            connectionString = _config.Value.ConnectionString;
         }
 
         /// <summary>
         /// Create a users account
         /// </summary>
         /// <param name="user"></param>
-        /// <returns>Return the user created</returns>
+        /// <returns>Return the user</returns>
         public IEnumerable<IUser> CreateUserAccount
         (
             IUser user
         )
         {
             try
-            { 
-                using (var connection = new SqlConnection(_config.Value.ConnectionString))
+            {
+                using (SqlCommand cmd = new SqlCommand(connectionString))
                 {
-                    DynamicParameters parameters = new DynamicParameters();
+                    using (SqlConnection connection = new SqlConnection(connectionString))
+                    {
+                        DynamicParameters parameters = new DynamicParameters();
 
-                    parameters.Add("@username", dbType: DbType.AnsiString, value: user.Username, direction: ParameterDirection.Input);
-                    parameters.Add("@password", dbType: DbType.AnsiString, value: user.Password, direction: ParameterDirection.Input);
+                        parameters.Add("@username", dbType: DbType.AnsiString, value: user.Username, direction: ParameterDirection.Input);
+                        parameters.Add("@password", dbType: DbType.AnsiString, value: user.Password, direction: ParameterDirection.Input);
 
-                    var results = connection.Query<User>("CreateUserAccount", parameters, commandType: CommandType.StoredProcedure);
+                        var results = connection.Query<User>("CreateUserAccount", parameters, commandType: CommandType.StoredProcedure);
 
-                    return results;
+                        return results;
+                    }
                 }
             }
             catch (Exception ex)

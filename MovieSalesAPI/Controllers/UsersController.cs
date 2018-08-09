@@ -58,7 +58,6 @@ namespace MovieSalesAPI.Controllers
         /// Create a new user
         /// </summary>
         /// <param name="request">User Request posted in the form of Username and Password</param>
-        [Route("users")]
         [AllowAnonymous]
         [HttpPost]
         public IEnumerable<IUser> CreateUserAccount([FromBody] User request)

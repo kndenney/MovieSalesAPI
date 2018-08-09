@@ -22,11 +22,11 @@ namespace MovieSalesAPI.Data
         //the data will be the same until the next day after midnight, in this example
         private TimeSpan untilMidnight = DateTime.Today.AddDays(1) - DateTime.Now;
         private string connectionString = "";
-        private IOptions<Configuration> _config;
+        private IOptions<AppConfig> _config;
 
         public MovieData(
           IMemoryCache memoryCache,
-          IOptions<Configuration> config
+          IOptions<AppConfig> config
         )
         {
             _memoryCache = memoryCache;
