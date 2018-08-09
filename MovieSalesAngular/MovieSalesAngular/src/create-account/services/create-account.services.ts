@@ -4,6 +4,7 @@ import { map } from 'rxjs/operators';
 import { Observable, Subject, asapScheduler, pipe, of, from, interval, merge, fromEvent } from 'rxjs';
 import { TokenRequest } from '../../shared/authorization/models/tokenrequest';
 import { environment } from '../../environments/environment.qa';
+import { User } from '../models/user';
 
 const httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -12,9 +13,14 @@ const httpOptions = {
 @Injectable()
 export class CreateAccountService {
 
+    public _user: User;
+    
     constructor(
-        private http: HttpClient
-    ) {}
+        private http: HttpClient,
+        private user: User
+    ) {
+        this._user = user;
+    }
 
     public createAccountSubject: Subject<any> = new Subject<any>();
 
@@ -22,6 +28,9 @@ export class CreateAccountService {
         username: string,
         password: string
     ): Observable<any> {
+
+        this._user.Username = username;
+        this._user.Password = password;
 
         const parameters = new HttpParams();
         parameters.set('@username', username);
@@ -42,12 +51,10 @@ export class CreateAccountService {
         // the JWT because after they create their account
         // Then are then sent to the login screen to login
 
-        alert(username);
-
-        return this.http.post<any>(baseUrl + 'users', requestOption)
+        return this.http.post<User>(baseUrl + 'users', this._user)
             .pipe(map(userAccount => {
-                const response = <any> userAccount;
-                this.createAccountSubject.next(response.moviename);
+                const response = <User> userAccount;
+                this.createAccountSubject.next(response.Username);
                 return response;
             }));
     }

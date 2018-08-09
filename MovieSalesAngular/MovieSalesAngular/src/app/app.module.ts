@@ -27,6 +27,7 @@ import { ErrorInterceptor } from '../error-handling/error-interceptor';
 import { ErrorHandlers } from '../error-handling/error-handler';
 import { MoviesService } from '../movies/services/movies.service';
 import { CreateAccountService } from '../create-account/services/create-account.services';
+import { User } from '../create-account/models/user';
 
 @NgModule({
   declarations: [
@@ -64,6 +65,7 @@ import { CreateAccountService } from '../create-account/services/create-account.
     AuthorizationService,
     MoviesService,
     CreateAccountService,
+    User,
     TokenRequest,
     TokenResponses,
     ErrorHandlers,

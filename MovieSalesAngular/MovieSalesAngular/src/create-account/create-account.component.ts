@@ -37,7 +37,7 @@ export class CreateAccountComponent implements OnInit {
             .subscribe(
                 response => {
 
-                    if (response.data[0].token == null) {
+                    if (response.data[0].username == null) {
                         // Invalid account creation - let the user know
                         this.snackbar.open
                         (
