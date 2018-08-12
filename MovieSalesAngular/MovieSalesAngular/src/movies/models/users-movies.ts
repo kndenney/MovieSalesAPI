@@ -1,4 +1,15 @@
 export class UsersMovies {
+    data: UsersMovie[];
+    message: Message[];
+  }
+
+  interface Message {
+    Code: number;
+    Message: string;
+    Path: string;
+  }
+
+  interface UsersMovie {
     movieid: number;
     userid: number;
     moviename: string;
@@ -12,4 +23,4 @@ export class UsersMovies {
     datepurchased: Date;
     lastmodified: Date;
     modifiedby: string;
-}
+  }

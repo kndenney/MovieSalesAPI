@@ -3,11 +3,16 @@
     <p>You're logged in with JWT!!</p>
     <div>
         Users Movies:
-        <ul>
-            <li *ngFor="let movies of usersMovies">
-                {{movies.moviename}} 
-                {{movies.datepurchased}}
-            </li>
+        <ul *ngIf="this.usersMovies">
+            <div *ngFor="let movies of this.usersMovies.data">
+                <li>
+                    {{movies.moviename}} 
+                </li>
+                <li>
+                    {{movies.movielength}} 
+                </li>
+                <img src="{{movies.imageurl}}">
+            </div>
         </ul>
     </div>
     <p><a [routerLink]="['/login']">Logout</a></p>

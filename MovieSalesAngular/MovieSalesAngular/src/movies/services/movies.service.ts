@@ -40,7 +40,7 @@ export class MoviesService {
         return this.http.get<UsersMovies>(baseUrl + 'movies/all', requestOption)
             .pipe(map(usersMovies => {
                 const response = <UsersMovies> usersMovies;
-                this.userMoviesSubject.next(response.moviename);
+               // this.userMoviesSubject.next(response.moviename);
                 return response;
             }));
     }

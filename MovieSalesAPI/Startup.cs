@@ -169,12 +169,10 @@ namespace MovieSalesAPI
             {
                 options.AddPolicy("CorsPolicy",
                     builder => builder
-                   // .AllowAnyOrigin()
-                   .WithOrigins("http://localhost:4200")
-                     .AllowAnyHeader()
-                    .AllowAnyMethod()      
-                    .AllowCredentials()
-                    .Build());
+                    .AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowCredentials().Build());
             });
 
             services.AddSwaggerDocumentation();
@@ -223,9 +221,8 @@ namespace MovieSalesAPI
             else
             {
                app.UseHsts();
+               app.UseHttpsRedirection();
             }
-
-            app.UseHttpsRedirection();
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();

@@ -23,6 +23,7 @@ namespace MovieSalesAPI.Data
         private TimeSpan untilMidnight = DateTime.Today.AddDays(1) - DateTime.Now;
         private string connectionString = "";
         private IOptions<AppConfig> _config;
+        MemoryCacheEntryOptions cacheExpirationOptions = new MemoryCacheEntryOptions();
 
         public MovieData(
           IMemoryCache memoryCache,
@@ -31,6 +32,9 @@ namespace MovieSalesAPI.Data
         {
             _memoryCache = memoryCache;
             _config = config;
+
+            cacheExpirationOptions.AbsoluteExpiration = DateTime.Now.AddMinutes(untilMidnight.TotalMinutes);
+            cacheExpirationOptions.Priority = CacheItemPriority.Normal;
         }
 
         //Example of Http REST Web API:
@@ -70,16 +74,7 @@ namespace MovieSalesAPI.Data
                     var results = connection.Query<Movie>("RetrieveUsersMovies", parameters, commandType: CommandType.StoredProcedure);
 
                     //The cache was empty therefore set a new cache object
-                    _memoryCache.Set(
-                        CacheName,
-                        results,
-                        new MemoryCacheEntryOptions()
-                        .SetAbsoluteExpiration(
-                            DateTimeOffset.UtcNow.AddMinutes(
-                                untilMidnight.TotalMinutes
-                            )
-                        )
-                    );
+                    _memoryCache.Set(CacheName, results, cacheExpirationOptions);
 
                     return results;
                 }
@@ -104,7 +99,6 @@ namespace MovieSalesAPI.Data
             {
                 CacheName = "AllMovies" + username;
 
-                //If the cache exists return it
                 if (_memoryCache.TryGetValue(CacheName, out IEnumerable<IMovie> movies))
                 {
                     return movies;
@@ -116,28 +110,20 @@ namespace MovieSalesAPI.Data
                 {
                     DynamicParameters parameters = new DynamicParameters();
 
-                    parameters.Add("@user", dbType: DbType.AnsiString, value: username, direction: ParameterDirection.Input);
+                    parameters.Add("@username", dbType: DbType.AnsiString, value: username, direction: ParameterDirection.Input);
 
                     var results = connection.Query<Movie>("RetrieveAllMoviesIncludingUsers", parameters, commandType: CommandType.StoredProcedure);
 
                     //The cache was empty therefore set a new cache object
-                    _memoryCache.Set(
-                        CacheName,
-                        results,
-                        new MemoryCacheEntryOptions()
-                        .SetAbsoluteExpiration(
-                            DateTimeOffset.UtcNow.AddMinutes(
-                                untilMidnight.TotalMinutes
-                            )
-                        )
-                    );
+                    _memoryCache.Set(CacheName, results, cacheExpirationOptions);
 
                     return results;
                 }
             }
             catch (Exception ex)
             {
-                return null;
+                //return Enumerable.Empty<IMovie>();
+                return new List<IMovie>();
             }
         }
 
@@ -174,16 +160,7 @@ namespace MovieSalesAPI.Data
                     var results = connection.Query<Movie>("sprocName", parameters, commandType: CommandType.StoredProcedure);
 
                     //The cache was empty therefore set a new cache object
-                    _memoryCache.Set(
-                        CacheName,
-                        results,
-                        new MemoryCacheEntryOptions()
-                        .SetAbsoluteExpiration(
-                            DateTimeOffset.UtcNow.AddMinutes(
-                                untilMidnight.TotalMinutes
-                            )
-                        )
-                    );
+                    _memoryCache.Set(CacheName, results, cacheExpirationOptions);
 
                     return results.ToList();
                 }
@@ -228,16 +205,7 @@ namespace MovieSalesAPI.Data
                     var results = connection.Query<IMovie>("sprocName", parameters, commandType: CommandType.StoredProcedure);
 
                     //The cache was empty therefore set a new cache object
-                    _memoryCache.Set(
-                        CacheName,
-                        results,
-                        new MemoryCacheEntryOptions()
-                        .SetAbsoluteExpiration(
-                            DateTimeOffset.UtcNow.AddMinutes(
-                                untilMidnight.TotalMinutes
-                            )
-                        )
-                    );
+                    _memoryCache.Set(CacheName, results, cacheExpirationOptions);
 
                     return results.ToList();
                 }
@@ -285,7 +253,6 @@ namespace MovieSalesAPI.Data
         }
 
         #endregion
-
     }
 
     public interface IMovieData

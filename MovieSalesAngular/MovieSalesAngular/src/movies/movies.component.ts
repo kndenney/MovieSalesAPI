@@ -17,14 +17,14 @@ export class MoviesComponent implements OnInit {
     private moviesService: MoviesService
    ) {}
 
-   public usersMovies: UsersMovies[];
+   public usersMovies: any;
 
     ngOnInit() {
 
         this.moviesService.retrieveAllMoviesIncludingUsers(
             localStorage.getItem('username')
-        ).subscribe(results => {
-            this.usersMovies = results;
+        ).subscribe((results: any) => {
+            this.usersMovies = <UsersMovies> results;
         });
     }
 

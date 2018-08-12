@@ -1,4 +1,15 @@
 export class Movies {
+    data: Movie[];
+    message: Message[];
+  }
+  
+  interface Message {
+    Code: number;
+    Message: string;
+    Path: string;
+  }
+  
+  interface Movie {
     movieid: number;
     moviename: string;
     price: number;
@@ -9,4 +20,4 @@ export class Movies {
     movielength: string;
     lastmodified: Date;
     modifiedby: string;
-}
+  }

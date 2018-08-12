@@ -10,13 +10,29 @@ namespace MovieSalesAPI
     /// </summary>
     public class Movie : IMovie
     {
-        public string Name { get; set; }
-        public string Description { get; set; }
+        public string movieid { get; set; }
+        public string moviename { get; set; }
+        public double price { get; set; }
+        public DateTime theaterreleasedate { get; set; }
+        public DateTime discreleasedate { get; set; }
+        public string mpaarating { get; set; }
+        public string imageurl { get; set; }
+        public TimeSpan movielength { get; set; }
+        public DateTime lastmodified { get; set; }
+        public string modifiedby { get; set; }
     }
 
     public interface IMovie
     {
-        string Name { get; set; }
-        string Description { get; set; }
+         string movieid { get; set; }
+         string moviename { get; set; }
+         double price { get; set; }
+         DateTime theaterreleasedate { get; set; }
+         DateTime discreleasedate { get; set; }
+         string mpaarating { get; set; }
+         string imageurl { get; set; }
+         TimeSpan movielength { get; set; }
+         DateTime lastmodified { get; set; }
+         string modifiedby { get; set; }
     }
 }
