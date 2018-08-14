@@ -94,12 +94,12 @@ namespace MovieSalesAPI.Controllers
 
         [Authorize(Policy = "APIMovieAccess")]
         [HttpGet]
-        [Route("all")]
-        public IEnumerable<IMovie> GetAllMoviesIncludingUsers()
+        [Route("all")] //IEnumerable<IMovie>
+        public IActionResult GetAllMoviesIncludingUsers()
         {
             if (User.Identity.IsAuthenticated)
             {
-                return _movieData.GetAllMoviesIncludingUsers(User.Identity.Name);
+                return Ok(_movieData.GetAllMoviesIncludingUsers(User.Identity.Name));
             }
             else
             {

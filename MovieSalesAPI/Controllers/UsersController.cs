@@ -59,10 +59,14 @@ namespace MovieSalesAPI.Controllers
         /// </summary>
         /// <param name="request">User Request posted in the form of Username and Password</param>
         [AllowAnonymous]
-        [HttpPost]
-        public IEnumerable<IUser> CreateUserAccount([FromBody] User request)
+        [HttpPost] //IEnumerable<IUser>
+        public IActionResult CreateUserAccount([FromBody] User request)
         {
-            return _userData.CreateUserAccount(request);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(_userData.CreateUserAccount(request));
+            }
+            return Ok(_userData.CreateUserAccount(request));
         }
 
 
