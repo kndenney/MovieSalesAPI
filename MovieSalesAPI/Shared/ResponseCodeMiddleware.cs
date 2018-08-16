@@ -48,6 +48,9 @@ namespace MovieSalesAPI.Shared
                         case 200:
                             message = "Response is ok";
                             break;
+                        case 400:
+                            message = "Bad Request";
+                            break;
                         case 401:
                             message = "Unauthorized access";
                             break;
@@ -76,7 +79,7 @@ namespace MovieSalesAPI.Shared
                     }
 
                     string json = addComma + "\"message\": [" +
-                        JsonConvert.SerializeObject(new Error()
+                        JsonConvert.SerializeObject(new Response()
                         {   
                             Code = statusCode.ToString(),
                             Message = message.ToString(),
@@ -117,7 +120,7 @@ namespace MovieSalesAPI.Shared
             }
 
             string json = "\"message\": [" + JsonConvert.SerializeObject(
-                new Error()
+                new Response()
                 {
                     Code = statusCode.ToString(),
                     Message = result.ToString(),
@@ -138,7 +141,7 @@ namespace MovieSalesAPI.Shared
         }
     }
 
-    public class Error {
+    public class Response {
         public string Code { get; set; }
         public string Message { get; set; }
         public string Path { get; set; }

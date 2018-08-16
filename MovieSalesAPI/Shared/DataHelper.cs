@@ -8,6 +8,6 @@ namespace MovieSalesAPI.Shared
 {
     public static class DataHelper
     {
-
+       
     }
 }

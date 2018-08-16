@@ -40,8 +40,6 @@ namespace MovieSalesAPI.Data.User
             IUser user
         )
         {
-            try
-            {
                 using (SqlCommand cmd = new SqlCommand(connectionString))
                 {
                     using (SqlConnection connection = new SqlConnection(connectionString))
@@ -56,11 +54,6 @@ namespace MovieSalesAPI.Data.User
                         return results;
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                return ex.Message;
-            }
         }
     }
 

@@ -9,15 +9,18 @@ namespace MovieSalesAPI.Data.User
 {
     public class User : IUser
     {
-        [BindRequired]
+        [Required]
         public string Username { get; set; }
-        [BindRequired]
+        [Required]
         public string Password { get; set; }
+        [Required]
+        public string FirstName { get; set; }
     }
 
     public interface IUser
     {
         string Username { get; set; }
         string Password { get; set; }
+        string FirstName { get; set; }
     }
 }

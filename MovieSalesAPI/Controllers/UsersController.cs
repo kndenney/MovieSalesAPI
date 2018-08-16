@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Net;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using MovieSalesAPI.Data.User;
+using MovieSalesAPI.Shared;
 using MovieSalesAPILogic;
 using MovieSalesAPILogic.Authorization;
 
@@ -67,17 +69,37 @@ namespace MovieSalesAPI.Controllers
             //this link - http://jasonwatmore.com/post/2018/05/10/angular-6-reactive-forms-validation-example
             //shows how to do reactive and has a link on how to do template driven which is what we curenlty have
             //but the funky syntax will be hard to explain to students I think
-            if (!ModelState.IsValid)
+
+            try
             {
+                if (!ModelState.IsValid)
+                {
+
+                    return _userData.CreateUserAccount(request);
+                }
 
                 return _userData.CreateUserAccount(request);
             }
+            catch(Exception ex)
+            {
+                // By not allowing our data class code to have a try/catch
+                // it forces our middleware not to assign a status code yet if 
+                // we have an exception. It will wait to assign a status code until it
+                // tries the code and then if the code breaks it will enter this exception handler
+                // whereby we assign a BadRequest status and return the error
+                // in this way we can have a consistent experience and return a consistent JSON
+                // object. Otherwise, if we had a try catch in the data class, it would error there
+                // but would have already assigned a status code of OK 200 with an HTTP call of 200.
+                // And while technically true it shows that the HTTP call went through OK
+                // but then our data  class errors and we have an issue.
 
-            return _userData.CreateUserAccount(request);
-
-            //return Ok(_userData.CreateUserAccount(request));
+                return StatusCode((int)HttpStatusCode.InternalServerError, (new ExceptionJson
+                {
+                    Exception = ex.Message,
+                    Stacktrace = ex.StackTrace,
+                    InnerException = (ex.InnerException != null) ? ex.InnerException.ToString() : ""
+                }));
+            }
         }
-
-
     }
 }
