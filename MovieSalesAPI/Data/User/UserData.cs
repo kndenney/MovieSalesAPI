@@ -35,7 +35,7 @@ namespace MovieSalesAPI.Data.User
         /// </summary>
         /// <param name="user"></param>
         /// <returns>Return the user</returns>
-        public IEnumerable<IUser> CreateUserAccount
+        public dynamic CreateUserAccount
         (
             IUser user
         )
@@ -59,13 +59,13 @@ namespace MovieSalesAPI.Data.User
             }
             catch (Exception ex)
             {
-                return null;
+                return ex.Message;
             }
         }
     }
 
     public interface IUserData
     {
-        IEnumerable<IUser> CreateUserAccount(IUser user);
+        dynamic CreateUserAccount(IUser user);
     }
 }

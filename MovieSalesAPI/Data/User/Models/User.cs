@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -8,8 +9,9 @@ namespace MovieSalesAPI.Data.User
 {
     public class User : IUser
     {
-        [Required]
+        [BindRequired]
         public string Username { get; set; }
+        [BindRequired]
         public string Password { get; set; }
     }
 

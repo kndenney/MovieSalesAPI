@@ -1,4 +1,80 @@
+<div class="alert alert-danger" role="alert" *ngIf="errors.length > 0">
+    <ul>
+        <li *ngFor="let error of errors">
+            {{ error }}
+        </li>
+    </ul>
+</div>
+
 <div class="container" fxLayout="row" fxLayout.xs="column" fxLayoutWrap fxLayoutAlign="center">
+    <form [formGroup]="this.createAccountForm" (ngSubmit)="createAccount()">
+        <mat-form-field appearance="standard">
+            <mat-label>Create Username</mat-label>
+            <input matInput formControlName="username" placeholder="Create Username" name="username" required>
+            <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+            <mat-hint>Username</mat-hint>
+        </mat-form-field>
+        <div *ngIf="submitted" class="alert alert-danger">
+            <div class="alert alert-danger" *ngIf="createAccountForm.get('username').hasError('required')">Username is required</div>
+        </div>
+
+        <mat-form-field appearance="standard">
+            <mat-label>Create Password</mat-label>
+            <input matInput placeholder="Create Password" name="password" required>
+            <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+            <mat-hint>Password</mat-hint>
+        </mat-form-field>
+        <div *ngIf="submitted" class="alert alert-danger">
+           <!--  <div *ngIf="createAccountForm.controls.createAccountForm.username.required">Password is required</div>
+            <div *ngIf="password.errors">Password must be at least 4 characters</div>
+           -->
+        </div>
+
+        <label>
+            First Name:
+            <input type="text" formControlName="firstName">
+          </label>
+        
+          <label>
+            Last Name:
+            <input type="text" formControlName="lastName">
+          </label>
+
+        <div formGroupName="address">
+            <h3>Address</h3>
+          
+            <label>
+              Street:
+              <input type="text" formControlName="street">
+            </label>
+          
+            <label>
+              City:
+              <input type="text" formControlName="city">
+            </label>
+            
+            <label>
+              State:
+              <input type="text" formControlName="state">
+            </label>
+          
+            <label>
+              Zip Code:
+              <input type="text" formControlName="zip">
+            </label>
+          </div>
+
+        <p>
+            Form Status: {{ createAccountForm.status }}
+          </p>
+
+        <div>
+            <button mat-raised-button [disabled]="loading && !createAccountForm.valid">Create Account</button>           
+            <img *ngIf="loading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+        </div>
+    </form>
+    
+    <!--
     <form name="form" (ngSubmit)="f.form.valid && createAccount()" #f="ngForm" novalidate>
         <div [ngClass]="{ 'has-error': f.submitted && !username.valid }">
             <mat-form-field appearance="standard">
@@ -25,7 +101,7 @@
         </div>
         <div *ngIf="error" class="alert alert-danger">{{error}}</div>
     
-    </form>
+    </form> -->
 
     Already have an account? <a href="#">Login</a>
 </div>

@@ -60,13 +60,22 @@ namespace MovieSalesAPI.Controllers
         /// <param name="request">User Request posted in the form of Username and Password</param>
         [AllowAnonymous]
         [HttpPost] //IEnumerable<IUser>
-        public IActionResult CreateUserAccount([FromBody] User request)
+        public dynamic CreateUserAccount([FromBody] User request)
         {
+            //https://www.carlrippon.com/integrating-validation-in-angular-2-and-asp-net-core/
+            //I think the above example uses reactive forms which is what we want
+            //this link - http://jasonwatmore.com/post/2018/05/10/angular-6-reactive-forms-validation-example
+            //shows how to do reactive and has a link on how to do template driven which is what we curenlty have
+            //but the funky syntax will be hard to explain to students I think
             if (!ModelState.IsValid)
             {
-                return BadRequest(_userData.CreateUserAccount(request));
+
+                return _userData.CreateUserAccount(request);
             }
-            return Ok(_userData.CreateUserAccount(request));
+
+            return _userData.CreateUserAccount(request);
+
+            //return Ok(_userData.CreateUserAccount(request));
         }
 
 
