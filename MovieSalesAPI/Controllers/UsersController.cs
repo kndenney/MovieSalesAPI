@@ -69,37 +69,30 @@ namespace MovieSalesAPI.Controllers
             //this link - http://jasonwatmore.com/post/2018/05/10/angular-6-reactive-forms-validation-example
             //shows how to do reactive and has a link on how to do template driven which is what we curenlty have
             //but the funky syntax will be hard to explain to students I think
-
-            try
-            {
                 if (!ModelState.IsValid)
                 {
 
                     return _userData.CreateUserAccount(request);
                 }
 
-                return _userData.CreateUserAccount(request);
-            }
-            catch(Exception ex)
-            {
-                // By not allowing our data class code to have a try/catch
-                // it forces our middleware not to assign a status code yet if 
-                // we have an exception. It will wait to assign a status code until it
-                // tries the code and then if the code breaks it will enter this exception handler
-                // whereby we assign a BadRequest status and return the error
-                // in this way we can have a consistent experience and return a consistent JSON
-                // object. Otherwise, if we had a try catch in the data class, it would error there
-                // but would have already assigned a status code of OK 200 with an HTTP call of 200.
-                // And while technically true it shows that the HTTP call went through OK
-                // but then our data  class errors and we have an issue.
+                var results = _userData.CreateUserAccount(request);
 
-                return StatusCode((int)HttpStatusCode.InternalServerError, (new ExceptionJson
+                //If there is an exception from the method we will want to
+                //create an exception class and fill it with data from the exception
+                //and we can then return that data instead of whatever the method
+                //would normally return if there was no exception
+                if (results.Exception != null)
                 {
-                    Exception = ex.Message,
-                    Stacktrace = ex.StackTrace,
-                    InnerException = (ex.InnerException != null) ? ex.InnerException.ToString() : ""
-                }));
-            }
+                    return StatusCode((int)HttpStatusCode.InternalServerError, new ExceptionJson
+                    {
+                        Exception = results.Exception,
+                        Stacktrace = results.Stacktrace,
+                        InnerException = (results.InnerException != null) ? results.InnerException.ToString() : ""
+                    });
+                } else
+                {
+                    return results;
+                }
         }
     }
 }

@@ -173,5 +173,10 @@
             <param name="user"></param>
             <returns>Return the user</returns>
         </member>
+        <member name="T:MovieSalesAPI.Shared.EditResponseMiddlewareExtensions">
+            <summary>
+            Extension method used to add the middleware to the HTTP request pipeline.
+            </summary>
+        </member>
     </members>
 </doc>

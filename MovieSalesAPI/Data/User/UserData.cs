@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace MovieSalesAPI.Data.User
@@ -40,6 +41,8 @@ namespace MovieSalesAPI.Data.User
             IUser user
         )
         {
+            try
+            {
                 using (SqlCommand cmd = new SqlCommand(connectionString))
                 {
                     using (SqlConnection connection = new SqlConnection(connectionString))
@@ -54,11 +57,21 @@ namespace MovieSalesAPI.Data.User
                         return results;
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                return new ExceptionJson
+                {
+                    Exception = ex.Message,
+                    Stacktrace = ex.StackTrace,
+                    InnerException = (ex.InnerException != null) ? ex.InnerException.ToString() : ""
+                };
+            }
         }
     }
 
     public interface IUserData
     {
-        dynamic CreateUserAccount(IUser user);
+       dynamic CreateUserAccount(IUser user);
     }
 }
