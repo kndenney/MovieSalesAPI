@@ -17,20 +17,26 @@
         </member>
         <member name="M:MovieSalesAPI.Controllers.MoviesController.GetUsersMovies">
             <summary>
-            Retrieve all movie details
+            Retrieve all of a users movies
             </summary>
-            <returns>Returns a list of movie details.</returns>
+            <returns>Returns users movies</returns>
         </member>
-        <member name="M:MovieSalesAPI.Controllers.MoviesController.GetSpecificMovieDetailsById(System.Int32)">
+        <member name="M:MovieSalesAPI.Controllers.MoviesController.GetAllMoviesIncludingUsers">
             <summary>
-            Retrieve specific movie
+            Retrieve all the movies in the system that are available for purchase
+            </summary>
+            <returns>List of movies</returns>
+        </member>
+        <member name="M:MovieSalesAPI.Controllers.MoviesController.GetSpecificUsersMovieDetailsById(System.Int32)">
+            <summary>
+            Retrieve specific movie for a user by movie id
             </summary>
             <param name="movieid">Movie Id</param>
             <returns>Return a movie</returns>
         </member>
-        <member name="M:MovieSalesAPI.Controllers.MoviesController.GetSpecificMovieDetailsByName(System.String)">
+        <member name="M:MovieSalesAPI.Controllers.MoviesController.GetSpecificUserMovieDetailsByName(System.String)">
             <summary>
-            Retrieve specific movie by name
+            Retrieve specific users movie by name
             </summary>
             <param name="moviename">Movie Name</param>
             <returns>Return a movie</returns>
@@ -60,11 +66,11 @@
         </member>
         <member name="M:MovieSalesAPI.Controllers.MoviesController.UpdatePartialMovieInDatabaseById(System.Int32,Microsoft.AspNetCore.JsonPatch.JsonPatchDocument{MovieSalesAPI.IMovie})">
             <summary>
-            Patch a portion of a movie
+            Update a portion movie details
             </summary>
             <param name="movieid"></param>
             <param name="moviePatch"></param>
-            <returns>Return the patched movie</returns>
+            <returns>Return the updated movie</returns>
         </member>
         <member name="M:MovieSalesAPI.Controllers.MoviesController.DeleteMovieFromDatabaseById(System.Int32)">
             <summary>
