@@ -8,7 +8,7 @@
 
 <div class="container" fxLayout="row" fxLayout.xs="column" fxLayoutWrap fxLayoutAlign="center">
     <form [formGroup]="this.createAccountForm" (ngSubmit)="createAccount()">
-        <mat-form-field appearance="standard">
+        <mat-form-field appearance="standard" class="control">
             <mat-label>Username</mat-label>
             <input matInput formControlName="username" placeholder="Username" name="username" required>
             <mat-icon matSuffix>done</mat-icon>
@@ -16,7 +16,7 @@
             <mat-error class="error-message" *ngIf="createAccountForm.get('username').hasError('required') && (createAccountForm.get('username').dirty || createAccountForm.get('username').touched)">Username is required.</mat-error>
         </mat-form-field>
 
-        <mat-form-field appearance="standard">
+        <mat-form-field appearance="standard" class="control">
             <mat-label>Password</mat-label>
             <input matInput formControlName="password" placeholder="Password" name="password" required>
             <mat-icon matSuffix>done</mat-icon>
@@ -24,7 +24,7 @@
             <mat-error class="error-message" *ngIf="createAccountForm.get('password').hasError('required') && (createAccountForm.get('password').dirty || createAccountForm.get('password').touched)">Password is required.</mat-error>
         </mat-form-field>
 
-        <mat-form-field appearance="standard">
+        <mat-form-field appearance="standard" class="control">
             <mat-label>First Name</mat-label>
             <input matInput formControlName="firstname" placeholder="First Name" name="firstname" required>
             <mat-icon matSuffix>done</mat-icon>
@@ -32,7 +32,7 @@
             <mat-error class="error-message" *ngIf="createAccountForm.get('firstname').hasError('required') && (createAccountForm.get('firstname').dirty || createAccountForm.get('firstname').touched)">First Name is required.</mat-error>
         </mat-form-field>
 
-        <mat-form-field appearance="standard">
+        <mat-form-field appearance="standard" class="control">
             <mat-label>Last Name</mat-label>
             <input matInput formControlName="lastname" placeholder="Last Name" name="lastname" required>
             <mat-icon matSuffix>done</mat-icon>
@@ -40,10 +40,10 @@
             <mat-error class="error-message" *ngIf="createAccountForm.get('lastname').hasError('required') && (createAccountForm.get('lastname').dirty || createAccountForm.get('lastname').touched)">Last Name is required.</mat-error>
         </mat-form-field>
 
-        <div formGroupName="address">
+        <div formGroupName="address" class="address">
             <h3>Address</h3>
           
-            <mat-form-field appearance="standard">
+            <mat-form-field appearance="standard" class="control">
                 <mat-label>Street Address</mat-label>
                 <input matInput formControlName="street" placeholder="Street" name="street" required>
                 <mat-icon matSuffix>done</mat-icon>
@@ -51,7 +51,7 @@
                 <mat-error class="error-message" *ngIf="createAccountForm.get('address.street').hasError('required') && (createAccountForm.get('address.street').dirty || createAccountForm.get('address.street').touched)">Street is required.</mat-error>
             </mat-form-field>
 
-            <mat-form-field appearance="standard">
+            <mat-form-field appearance="standard" class="control">
                 <mat-label>City</mat-label>
                 <input matInput formControlName="city" placeholder="City" name="city" required>
                 <mat-icon matSuffix>done</mat-icon>
@@ -59,7 +59,7 @@
                 <mat-error class="error-message" *ngIf="createAccountForm.get('address.city').hasError('required') && (createAccountForm.get('address.city').dirty || createAccountForm.get('address.city').touched)">City is required.</mat-error>
             </mat-form-field>
 
-            <mat-form-field appearance="standard">
+            <mat-form-field appearance="standard" class="control">
                 <mat-label>State</mat-label>
                 <input matInput formControlName="state" placeholder="State" name="state" required>
                 <mat-icon matSuffix>done</mat-icon>
@@ -67,9 +67,9 @@
                 <mat-error class="error-message" *ngIf="createAccountForm.get('address.state').hasError('required') && (createAccountForm.get('address.state').dirty || createAccountForm.get('address.state').touched)">State is required.</mat-error>
             </mat-form-field>
           
-            <mat-form-field appearance="standard">
+            <mat-form-field appearance="standard" class="control">
                 <mat-label>Zip Code</mat-label>
-                <input matInput formControlName="Zip Code" placeholder="Zip Code" name="zip" required>
+                <input matInput formControlName="zip" placeholder="Zip Code" name="zip" required>
                 <mat-icon matSuffix>done</mat-icon>
                 <mat-hint>Zip Code</mat-hint>
                 <mat-error class="error-message" *ngIf="createAccountForm.get('address.zip').hasError('required') && (createAccountForm.get('address.zip').dirty || createAccountForm.get('address.zip').touched)">Zip Code is required.</mat-error>
@@ -82,7 +82,7 @@
           </p>
 
         <div>
-            <button mat-raised-button [disabled]="loading && !createAccountForm.valid">Create Account</button>           
+            <button mat-raised-button [disabled]="createAccountForm.invalid">Create Account</button>           
             <img *ngIf="loading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
         </div>
     </form>
