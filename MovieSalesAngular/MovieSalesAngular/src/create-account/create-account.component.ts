@@ -11,7 +11,8 @@ import { FormBuilder, FormGroup, Validators, FormsModule, NgForm, ReactiveFormsM
 
 export class CreateAccountComponent implements OnInit {
 
-    //This is a guide: https://codecraft.tv/courses/angular/forms/model-driven-validation/
+    // This is a guide: https://codecraft.tv/courses/angular/forms/model-driven-validation/
+    // Material Design Icons: https://material.io/tools/icons/?style=baseline
     createAccountForm: FormGroup;
     private _formBuilder: FormBuilder;
     submitted = false;
@@ -44,8 +45,8 @@ export class CreateAccountComponent implements OnInit {
         this.createAccountForm = this._formBuilder.group({
             username: ['', Validators.required],
             password: ['', [Validators.required, Validators.minLength(4)]],
-            firstName: ['', [Validators.required, Validators.maxLength(50)]],
-            lastName: ['', [Validators.required, Validators.maxLength(50)]],
+            firstname: ['', [Validators.required, Validators.maxLength(50)]],
+            lastname: ['', [Validators.required, Validators.maxLength(50)]],
             address: this._formBuilder.group({
                 street: ['', [Validators.required, Validators.maxLength(255)]],
                 city: ['', [Validators.required, Validators.maxLength(255)]],
