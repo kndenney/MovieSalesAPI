@@ -18,7 +18,7 @@
         <div [ngClass]="{ 'has-error': f.submitted && !username.valid }">
             <mat-form-field appearance="standard">
                 <mat-label>Username</mat-label>
-                <input matInput placeholder="Username" name="username" [(ngModel)]="model.username" #username="ngModel" required>
+                <input matInput placeholder="Username" name="username" [(ngModel)]="model.username" #username="ngModel">
                 <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
                 <mat-hint>Username</mat-hint>
             </mat-form-field>
@@ -28,7 +28,7 @@
         <div [ngClass]="{ 'has-error': f.submitted && !password.valid }">
             <mat-form-field appearance="standard">
                 <mat-label>Password</mat-label>
-                <input matInput placeholder="Password" name="password" [(ngModel)]="model.password" #password="ngModel" required>
+                <input matInput placeholder="Password" name="password" [(ngModel)]="model.password" #password="ngModel">
                 <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
                 <mat-hint>Password</mat-hint>
             </mat-form-field>

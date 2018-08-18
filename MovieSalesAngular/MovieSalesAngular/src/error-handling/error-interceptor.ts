@@ -11,8 +11,6 @@ import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { ErrorHandlers } from './error-handler';
 
-// https://hackernoon.com/global-http-error-catching-in-angular-4-3-9e15cc1e0a6b
-
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
   constructor(
@@ -32,8 +30,6 @@ export class ErrorInterceptor implements HttpInterceptor {
         return;
       }
 
-      // https://www.npmjs.com/package/http-status-codes
-
       // HttpErrorResponse - error from a service call
       if (err instanceof HttpErrorResponse) {
         // do error handling here
@@ -41,7 +37,7 @@ export class ErrorInterceptor implements HttpInterceptor {
         return;
       } else {
         // Internal Angular error such as:
-        //
+        this.errorHandler.handleError(err, 500);
       }
     }));
   }
