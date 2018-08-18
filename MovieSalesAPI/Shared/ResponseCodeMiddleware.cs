@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http.Headers;
@@ -31,10 +32,55 @@ namespace MovieSalesAPI.Shared
             {
                 try
                 {
-                    //Start the next portion of the pipeline call so that you get your response
-                    //then start mapping the below code wrapper around it
-                    //So if it is a controller you get the response before starting to wrap the data
+
+                    //Retrieve the current Http Response body and store it
+                    var originBody = httpContext.Response.Body;
+
+                    //Create a new body and set the current contexted body to
+                    //that blank stream
+                    var newBody = new MemoryStream();
+
+                    httpContext.Response.Body = newBody;
+
+                    //Run the next part of the middleware pipeline which is
+                    //the .Mvc() portion of the Startup.cs
+                    //so this will return data from Controller methods
                     await _next(httpContext);
+
+                    //Now that we have ran the data call above we will then retrieve that data from the pipeline
+                    newBody.Seek(0, SeekOrigin.Begin);
+
+                    string d = new StreamReader(newBody).ReadToEnd();
+
+                    //Reset the response body to what it was originally before beginning other pipelin requests
+                    httpContext.Response.Body = originBody;
+
+                    string exceptionText = "";
+
+                    if (d.StartsWith("\"message\": [{\"Code\""))
+                    {
+                        d = "{ \"data\": [], " + d;
+                    }
+                    else if (d.StartsWith("{\"error\":\""))
+                    {
+                        d = "{ \"data\": [], " + d;
+                    }
+                    else
+                    {
+                        if (d.StartsWith("{\"exception\":\""))
+                        {
+                            //if there is an exception from a controller or data class
+                            //assign its value to the exception variable text
+                            exceptionText = d;
+                            //Clear the data variable
+                            //and assign blank 'data' since there was an error
+                            d = "{ \"data\": []";
+                        }
+                        else
+                        {
+                            d = "{ \"data\": " + d;
+                        }
+                    }
 
                     //This is where we need to create a custom Error() class
                     int statusCode = httpContext.Response.StatusCode;
@@ -71,20 +117,13 @@ namespace MovieSalesAPI.Shared
                         message = message + error.Error.Message.ToString();
                     }
 
-                    string addComma = "";
-                    //There may be a previous response so add a comma
-                    if (httpContext.Response.Body.Length > 0)
-                    {
-                        addComma = ",";
-                    }
-
-                    string json = addComma + "\"message\": [" +
+                    string json = d + ", " + "\"message\": [" +
                         JsonConvert.SerializeObject(new Response()
                         {   
                             Code = statusCode.ToString(),
-                            Message = message.ToString(),
+                            Message = exceptionText + " " + message.ToString(),
                             Path = httpContext.Request.Path.ToString() + httpContext.Request.QueryString
-                        }) + "]";
+                        }) + "]}";
 
                     httpContext.Response.ContentType = new MediaTypeHeaderValue("application/json").ToString();
                     await httpContext.Response.WriteAsync(json, Encoding.UTF8);
@@ -99,18 +138,24 @@ namespace MovieSalesAPI.Shared
 
     private static Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
-            var code = HttpStatusCode.InternalServerError; // 500 if unexpected
+            var code = HttpStatusCode.InternalServerError;
 
-            //if (exception is MyNotFoundException) code = HttpStatusCode.NotFound;
-            //else if (exception is MyUnauthorizedException) code = HttpStatusCode.Unauthorized;
-            //else if (exception is MyException) code = HttpStatusCode.BadRequest;
+            var result = new ExceptionJson()
+            {
+                Exception = exception.Message,
+                Stacktrace = exception.StackTrace,
+                InnerException = (exception.InnerException != null) ? exception.InnerException.ToString() : ""
+            };
 
-            var result = JsonConvert.SerializeObject(new { error = exception.Message });
-            //context.Response.ContentType = "application/json";
+            string exceptionMessage = "";
+            exceptionMessage = "\"exception\": \"" + result.Exception + "\",";
+            exceptionMessage += "\"stacktrace\": \"" + result.Stacktrace + "\",";
+            exceptionMessage += "\"innerException\": \"" + result.InnerException + "\"";
+
+
             context.Response.StatusCode = (int)code;
 
             int statusCode = (int)code;
-
 
             string addComma = "";
             //There may be a previous response so add a comma
@@ -119,14 +164,14 @@ namespace MovieSalesAPI.Shared
                 addComma = ",";
             }
 
-            string json = "\"message\": [" + JsonConvert.SerializeObject(
+            string json = "{ \"data\": [], " + "\"message\": [" + JsonConvert.SerializeObject(
                 new Response()
                 {
                     Code = statusCode.ToString(),
-                    Message = result.ToString(),
+                    Message = exceptionMessage,
                     Path = context.Request.Path.ToString() + context.Request.QueryString
                 }
-            ) + "]";
+            ) + "]}";
 
             return context.Response.WriteAsync(addComma + json);
         }

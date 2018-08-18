@@ -37,25 +37,10 @@ export class AuthorizationService {
             headers: new HttpHeaders()
         };
 
-    
-        /*requestOption.params.set(
-            'test', 'test'
-        ).set(
-            'some next value', 'value'
-        ); or 
-     const parameters = new HttpParams();
-        parameters.set("some vale", "val");
-
-         requestOption.params = parameters;
-        */
-
-       // requestOption.params = parameters;
-       // ('Content-Type', 'application-json');
-        requestOption.headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
+        requestOption.headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
         const baseUrl = 'https://localhost:44368/';
 
         return this.http.post<any>(baseUrl + 'users/token', this._tokenRequest)
-        // , requestOption) // JSON.stringify(this._tokenRequest), requestOption)
             .pipe(map(user => {
 
                 const response = <TokenResponses> user;

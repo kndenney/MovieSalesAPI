@@ -44,6 +44,9 @@ namespace MovieSalesAPI
         //   (like a subdomain etc.)
         //4. Make sure to modify the response to make sure it is consistent via the Middleware
 
+        //Add API versioning:
+        //https://blog.jimismith.me/blogs/api-versioning-in-aspnet-core-with-nice-swagg
+
         public Startup(IHostingEnvironment env, IConfiguration configuration)
         {
             _configuration = configuration;

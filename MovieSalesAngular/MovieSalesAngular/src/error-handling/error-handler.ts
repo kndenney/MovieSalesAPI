@@ -10,6 +10,8 @@ export class ErrorHandlers {
 
   public handleError(err: any, status?: Number) {
     // Send error to database
+    // Here would develop an error service and send the error to our logging service or database etc.
+
 
     // Figure out what kind of error you now have
     // and format your message accordingly

@@ -23,8 +23,8 @@ namespace MovieSalesAPI.Shared
 
             if (!context.Request.Path.ToString().Contains("/swagger")) {
 
+                //Retrieve the current Http Response body and store it
                 var originBody = context.Response.Body;
-
                 var newBody = new MemoryStream();
 
                 context.Response.Body = newBody;
@@ -35,47 +35,20 @@ namespace MovieSalesAPI.Shared
 
                 string json = new StreamReader(newBody).ReadToEnd();
 
+                //Reset the response body to what it was originally before beginning other pipelin requests
                 context.Response.Body = originBody;
-
-                string modifiedJson = json; //This is where we will check for swagger like the route being
-                                            //'/swagger/index.html or something along those lines
-                                            //or in the responeCodemiddleware... then in here we will for sure if the route is swagger
-                                            //do something but also if the route is not swagger tack on the brackets [ ] and json response
-                                            //and all that
-
-                if (!json.ToString().Contains("<title>Swagger UI</title>"))
-                {
-                   if (json.StartsWith("\"message\": [{\"Code\""))
-                    {
-                        json = "{ \"data\": [], " + json + " }";
-                    
-                    }
-                    else if (json.StartsWith("{\"error\":\""))
-                    {
-                        json = "{ \"data\": [], " + json + " }";
-                    }
-                    else
-                    {
-                        json = "{ \"data\": " + json + " }";
-                    }
-
-                    //Throw new exception
-                    //{ "data:": {"error":"Parameter cannot be null\r\nParameter name: original"} }
-                    //{ "data:": ["value1","value2"],"message": [{"Code":"200","Message":"Response is ok","Path":"/api/values"}] }
-                    //{ "data:": [], {"error":"Parameter cannot be null\r\nParameter name: original"} }
-
-                }
 
                 await context.Response.WriteAsync(json);
             } else
             {
                 await _next(context);
             }
-
         }
     }
 
-    // Extension method used to add the middleware to the HTTP request pipeline.
+    /// <summary>
+    /// Extension method used to add the middleware to the HTTP request pipeline.
+    /// </summary>
     public static class EditResponseMiddlewareExtensions
     {
         public static IApplicationBuilder UseEditResponseMiddleware(this IApplicationBuilder builder)
