@@ -13,6 +13,8 @@ export class CreateAccountComponent implements OnInit {
 
     // This is a guide: https://codecraft.tv/courses/angular/forms/model-driven-validation/
     // Material Design Icons: https://material.io/tools/icons/?style=baseline
+    // Form options: // https://loiane.com/2017/08/angular-reactive-forms-trigger-validation-on-submit/
+
     createAccountForm: FormGroup;
     private _formBuilder: FormBuilder;
     submitted = false;
@@ -54,7 +56,7 @@ export class CreateAccountComponent implements OnInit {
                 zip: ['', [Validators.required, Validators.maxLength(10)]]
               }),
         });
-    } //https://loiane.com/2017/08/angular-reactive-forms-trigger-validation-on-submit/
+    }
 
     createAccount() {
         // let index = 0; //This would be some index of some database call or something like that this.items.indexOf(item);

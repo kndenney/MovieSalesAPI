@@ -1,0 +1,17 @@
+#design-cast {
+    position: relative;
+    overflow: hidden;
+}
+.member {
+    float:left;
+    width:31%;
+    margin:1% 1% 45px 1%;
+}
+.name {
+    position:absolute;
+    bottom:0px;
+}
+.member img {
+    width: 100%;
+    display: block;
+}
