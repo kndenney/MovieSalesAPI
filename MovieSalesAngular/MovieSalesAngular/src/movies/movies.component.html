@@ -1,20 +1,37 @@
 <div class="col-md-6 col-md-offset-3">
     <h1>Home</h1>
     <p>You're logged in with JWT!!</p>
-    <div>
-        Users Movies:
-        <ul *ngIf="this.usersMovies">
-            <div *ngFor="let movies of this.usersMovies.data">
-                <li>
+
+    <div id="design-cast">
+        <h4>Movies</h4>
+        <div *ngFor="let movies of this.usersMovies.data">
+            <div class="member">
+                <img src="{{movies.imageurl}}" class="img-responsive img-thumbnail" alt="" />
+                <div class="name">
                     {{movies.moviename}} 
-                </li>
-                <li>
+                    <br />
                     {{movies.movielength}} 
-                </li>
-                <img src="{{movies.imageurl}}">
-            </div>
-        </ul>
+                </div>
+            </div>             
+        </div>
     </div>
+
     <p><a [routerLink]="['/login']">Logout</a></p>
 </div>
 Back to top
+
+
+<!-- <div class="container" fxLayout="row" fxLayout.xs="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="center">
+    <div fxFlex="20%">
+        <img mat-card-image class="img" src="https://d2lm6fxwu08ot6.cloudfront.net/img-thumbs/960w/8V46UZCS0V.jpg">
+    </div>
+    <div fxFlex="20%">
+        <img mat-card-image class="img" src="https://d2lm6fxwu08ot6.cloudfront.net/img-thumbs/960w/LTLE4QGRVQ.jpg">
+    </div>
+    <div fxFlex="20%">
+        <img mat-card-image class="img" src="https://d2lm6fxwu08ot6.cloudfront.net/img-thumbs/960w/R926LU1YEA.jpg">
+    </div>
+    <div fxFlex="20%">
+        <img mat-card-image class="img" src="https://d2lm6fxwu08ot6.cloudfront.net/img-thumbs/960w/U9PP3KXXY2.jpg">
+    </div>
+</div> -->

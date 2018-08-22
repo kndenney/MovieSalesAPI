@@ -43,6 +43,10 @@ namespace MovieSalesAPI
         //3. Install CorsPolicy so that you can access the API from a domain name that is not the same as the API
         //   (like a subdomain etc.)
         //4. Make sure to modify the response to make sure it is consistent via the Middleware
+        
+        //Add API versioning:
+        //https://blog.jimismith.me/blogs/api-versioning-in-aspnet-core-with-nice-swagg
+        //https://neelbhatt.com/2018/04/21/api-versioning-in-net-core/
 
         //Add API versioning:
         //https://blog.jimismith.me/blogs/api-versioning-in-aspnet-core-with-nice-swagg
@@ -67,6 +71,14 @@ namespace MovieSalesAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
+            services.AddApiVersioning(o => {
+                o.ReportApiVersions = true;
+                o.AssumeDefaultVersionWhenUnspecified = true;
+                o.DefaultApiVersion = new ApiVersion(1, 0);
+            });
+
+
             // Register the Swagger generator, defining 1 or more Swagger documents
             services.AddSwaggerGen(c =>
             {
