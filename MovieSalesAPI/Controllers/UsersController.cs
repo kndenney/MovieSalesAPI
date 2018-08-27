@@ -81,13 +81,12 @@ namespace MovieSalesAPI.Controllers
                 //create an exception class and fill it with data from the exception
                 //and we can then return that data instead of whatever the method
                 //would normally return if there was no exception
-                if (results.Exception != null)
+                if (results.Error != null)
                 {
-                    return StatusCode((int)HttpStatusCode.InternalServerError, new ExceptionJson
+                    return StatusCode((int)HttpStatusCode.InternalServerError, new ErrorJson
                     {
-                        Exception = results.Exception,
-                        Stacktrace = results.Stacktrace,
-                        InnerException = (results.InnerException != null) ? results.InnerException.ToString() : ""
+                        Error = results.Error,
+                        Internalcode = results.Internalcode
                     });
                 } else
                 {

@@ -10,10 +10,12 @@ namespace MovieSalesAPI.Shared
         private string exception;
         private string innerexception;
         private string stacktrace;
+        private string internalcode;
 
         public string Exception { get; set; }
         public string Stacktrace { get; set; }
 
         public string InnerException { get; set; }
+        public string Internalcode { get; set; }
     }
 }

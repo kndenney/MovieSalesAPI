@@ -33,7 +33,7 @@ export class MoviesService {
         };
 
         requestOption.headers = new HttpHeaders().set('Content-Type', 'application/json');
-        const baseUrl = 'https://localhost:44368/';
+        const baseUrl = 'http://localhost:5000/';
 
         requestOption.params = parameters;
 
@@ -53,7 +53,7 @@ export class MoviesService {
         };
 
         requestOption.headers = new HttpHeaders().set('Content-Type', 'application/json');
-        const baseUrl = 'https://localhost:44368/api/';
+        const baseUrl = 'http://localhost:5000/api/';
 
         return this.http.get<Movies>(baseUrl + 'movies', requestOption)
             .pipe(map(movies => {

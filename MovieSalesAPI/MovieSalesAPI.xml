@@ -109,7 +109,7 @@
         </member>
         <member name="M:MovieSalesAPI.Controllers.ValuesController.Get">
             <summary>
-            Retrieve all movies
+            Retrieve all values that I have created
             </summary>
             <returns>Action result of list of values</returns>
         </member>

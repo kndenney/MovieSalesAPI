@@ -60,12 +60,20 @@ namespace MovieSalesAPI.Data.User
             }
             catch (Exception ex)
             {
-                return new ExceptionJson
+                Guid internalCode = Guid.NewGuid();
+                return new ErrorJson {
+                    Error = ex.Message,
+                    Internalcode = internalCode.ToString()
+                };
+
+                //This needs saved to the database
+                /* new ExceptionJson
                 {
                     Exception = ex.Message,
                     Stacktrace = ex.StackTrace,
-                    InnerException = (ex.InnerException != null) ? ex.InnerException.ToString() : ""
-                };
+                    InnerException = (ex.InnerException != null) ? ex.InnerException.ToString() : "",
+                    Internalcode = internalCode.ToString()
+                };*/
             }
         }
     }

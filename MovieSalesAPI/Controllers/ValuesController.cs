@@ -13,7 +13,7 @@ namespace MovieSalesAPI.Controllers
     {
         // GET api/values
         /// <summary>
-        /// Retrieve all movies
+        /// Retrieve all values that I have created
         /// </summary>
         /// <returns>Action result of list of values</returns>
         [HttpGet]
@@ -32,7 +32,7 @@ namespace MovieSalesAPI.Controllers
         [HttpGet("{id}")]
         public ActionResult<string> Get(int id)
         {
-            return "value";
+            return "kyledenney";
         }
 
         // POST api/values
