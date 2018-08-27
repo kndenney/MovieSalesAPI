@@ -225,8 +225,6 @@ namespace MovieSalesAPI
 
             app.UseCors("CorsPolicy");
 
-            app.UseEditResponseMiddleware();
-
             app.UseResponseCodeMiddleware();
 
             if (env.IsDevelopment())

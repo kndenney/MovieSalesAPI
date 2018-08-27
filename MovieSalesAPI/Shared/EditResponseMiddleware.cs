@@ -29,6 +29,8 @@ namespace MovieSalesAPI.Shared
 
                 context.Response.Body = newBody;
 
+                throw new Exception();
+
                 await _next(context);
 
                 newBody.Seek(0, SeekOrigin.Begin);
