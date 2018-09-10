@@ -41,14 +41,22 @@
             <param name="moviename">Movie Name</param>
             <returns>Return a movie</returns>
         </member>
-        <member name="M:MovieSalesAPI.Controllers.MoviesController.SaveMovieToDatabase(MovieSalesAPI.IMovie)">
+        <member name="M:MovieSalesAPI.Controllers.MoviesController.SaveMovieToDatabase(MovieSalesAPI.Movie)">
             <summary>
             Create a new movie
             </summary>
             <param name="movie">Movie</param>
             <returns>Return the movie created</returns>
         </member>
-        <member name="M:MovieSalesAPI.Controllers.MoviesController.UpdateEntireMovieInDatabaseById(System.Int32,MovieSalesAPI.IMovie)">
+        <member name="M:MovieSalesAPI.Controllers.MoviesController.SaveUsersMovieToDatabase(System.Int32,System.String)">
+            <summary>
+            Create a new movie
+            </summary>
+            <param name="movie">Movie</param>
+            <param name="username">username</param>
+            <returns>Return the movie created</returns>
+        </member>
+        <member name="M:MovieSalesAPI.Controllers.MoviesController.UpdateEntireMovieInDatabaseById(System.Int32,MovieSalesAPI.Movie)">
             <summary>
             Update an entire movie
             </summary>
@@ -56,7 +64,7 @@
             <param name="movie"></param>
             <returns>Return the movie that was updated</returns>
         </member>
-        <member name="M:MovieSalesAPI.Controllers.MoviesController.UpdateEntireMovieInDatabaseByName(System.String,MovieSalesAPI.IMovie)">
+        <member name="M:MovieSalesAPI.Controllers.MoviesController.UpdateEntireMovieInDatabaseByName(System.String,MovieSalesAPI.Movie)">
             <summary>
             Update movie
             </summary>
@@ -155,7 +163,15 @@
             <param name="username"></param>
             <returns>Return a movie</returns>
         </member>
-        <member name="M:MovieSalesAPI.Data.MovieData.SaveMovieToDatabase(MovieSalesAPI.IMovie,System.String)">
+        <member name="M:MovieSalesAPI.Data.MovieData.SaveMovieToDatabase(MovieSalesAPI.IMovie)">
+            <summary>
+            Save a movie
+            </summary>
+            <param name="movie"></param>
+            <param name="username"></param>
+            <returns>Return the movie saved</returns>
+        </member>
+        <member name="M:MovieSalesAPI.Data.MovieData.SaveUsersMovieToDatabase(System.Int32,System.String)">
             <summary>
             Save a movie
             </summary>
@@ -178,6 +194,13 @@
             </summary>
             <param name="user"></param>
             <returns>Return the user</returns>
+        </member>
+        <member name="M:MovieSalesAPI.Data.User.UserData.RetrieveData(System.String)">
+            <summary>
+            Retrieve a username
+            </summary>
+            <param name="username"></param>
+            <returns>Return the username</returns>
         </member>
         <member name="T:MovieSalesAPI.Shared.EditResponseMiddlewareExtensions">
             <summary>

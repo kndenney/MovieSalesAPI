@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -11,9 +12,11 @@ namespace MovieSalesAPI
     /// </summary>
     public class Movie : IMovie
     {
+        [BindNever]
         public string movieid { get; set; }
         public string moviename { get; set; }
         public double price { get; set; }
+        public int availableforpurchase { get; set; }
         public DateTime theaterreleasedate { get; set; }
         public DateTime discreleasedate { get; set; }
         public string mpaarating { get; set; }
@@ -28,6 +31,7 @@ namespace MovieSalesAPI
          string movieid { get; set; }
          string moviename { get; set; }
          double price { get; set; }
+         int availableforpurchase { get; set; }
          DateTime theaterreleasedate { get; set; }
          DateTime discreleasedate { get; set; }
          string mpaarating { get; set; }

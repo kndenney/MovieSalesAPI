@@ -69,7 +69,7 @@ namespace MovieSalesAPI.Data
                 {
                     DynamicParameters parameters = new DynamicParameters();
 
-                    parameters.Add("@user", dbType: DbType.AnsiString, value: username, direction: ParameterDirection.Input);
+                    parameters.Add("@username", dbType: DbType.AnsiString, value: username, direction: ParameterDirection.Input);
 
                     var results = connection.Query<Movie>("RetrieveUsersMovies", parameters, commandType: CommandType.StoredProcedure);
 
@@ -151,7 +151,7 @@ namespace MovieSalesAPI.Data
 
                 //Retrieve the movies from the database based on the username
                 //of the JWT token username
-                using (var connection = new SqlConnection("test"))
+                using (var connection = new SqlConnection(_config.Value.ConnectionString))
                 {
                     DynamicParameters parameters = new DynamicParameters();
 
@@ -195,14 +195,14 @@ namespace MovieSalesAPI.Data
 
                 //Retrieve the movies from the database based on the username
                 //of the JWT token username
-                using (var connection = new SqlConnection("test"))
+                using (var connection = new SqlConnection(_config.Value.ConnectionString))
                 {
                     DynamicParameters parameters = new DynamicParameters();
 
                     parameters.Add("@user", dbType: DbType.AnsiString, value: username, direction: ParameterDirection.Input);
                     parameters.Add("@moviename", dbType: DbType.AnsiString, value: moviename, direction: ParameterDirection.Input);
 
-                    var results = connection.Query<IMovie>("sprocName", parameters, commandType: CommandType.StoredProcedure);
+                    var results = connection.Query<Movie>("sprocName", parameters, commandType: CommandType.StoredProcedure);
 
                     //The cache was empty therefore set a new cache object
                     _memoryCache.Set(CacheName, results, cacheExpirationOptions);
@@ -228,7 +228,59 @@ namespace MovieSalesAPI.Data
         /// <returns>Return the movie saved</returns>
         public IEnumerable<IMovie> SaveMovieToDatabase
         (
-            IMovie movie,
+            IMovie movie
+        )
+        {
+            try
+            {
+                CacheName = "SaveMovieToDatabase" + movie.moviename + movie.imageurl;
+
+                //If the cache exists return it
+                if (_memoryCache.TryGetValue(CacheName, out IEnumerable<IMovie> movies))
+                {
+                    return movies;
+                }
+
+                //Retrieve the movies from the database based on the username
+                //of the JWT token username
+                using (var connection = new SqlConnection(_config.Value.ConnectionString))
+                {
+                    DynamicParameters parameters = new DynamicParameters();
+
+                    parameters.Add("@moviename", dbType: DbType.AnsiString, value: movie.moviename, direction: ParameterDirection.Input);
+                    parameters.Add("@price", dbType: DbType.Double, value: movie.price, direction: ParameterDirection.Input);
+                    parameters.Add("@availableforpurchase", dbType: DbType.Int32, value: movie.availableforpurchase, direction: ParameterDirection.Input);
+                    parameters.Add("@theaterreleasedate", dbType: DbType.DateTime, value: movie.theaterreleasedate, direction: ParameterDirection.Input);
+                    parameters.Add("@discreleasedate", dbType: DbType.DateTime, value: movie.discreleasedate, direction: ParameterDirection.Input);
+                    parameters.Add("@mpaarating", dbType: DbType.AnsiString, value: movie.mpaarating, direction: ParameterDirection.Input);
+                    parameters.Add("@imageurl", dbType: DbType.AnsiString, value: movie.imageurl, direction: ParameterDirection.Input);
+                    parameters.Add("@movielength", dbType: DbType.Time, value: movie.movielength, direction: ParameterDirection.Input);
+                    parameters.Add("@lastmodified", dbType: DbType.DateTime, value: movie.lastmodified, direction: ParameterDirection.Input);
+                    parameters.Add("@modifiedby", dbType: DbType.AnsiString, value: movie.modifiedby, direction: ParameterDirection.Input);
+
+                    var results = connection.Query<Movie>("InsertMovie", parameters, commandType: CommandType.StoredProcedure);
+
+                    //The cache was empty therefore set a new cache object
+                    _memoryCache.Set(CacheName, results, cacheExpirationOptions);
+
+                    return results.ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Save a movie
+        /// </summary>
+        /// <param name="movie"></param>
+        /// <param name="username"></param>
+        /// <returns>Return the movie saved</returns>
+        public IEnumerable<IMovie> SaveUsersMovieToDatabase
+        (
+            int movieid,
             string username
         )
         {
@@ -282,7 +334,12 @@ namespace MovieSalesAPI.Data
 
         IEnumerable<IMovie> SaveMovieToDatabase
         (
-           IMovie movie,
+           IMovie movie
+        );
+
+        IEnumerable<IMovie> SaveUsersMovieToDatabase
+        (
+           int movieid,
            string username
         );
 

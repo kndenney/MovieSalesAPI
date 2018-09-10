@@ -61,11 +61,11 @@ namespace MovieSalesAPI.Shared
 
                         if (d.StartsWith("\"message\": [{\"Code\""))
                         {
-                            d = "{ \"data\": [], " + d;
+                            d = "{ \"data\": [] " + d;
                         }
                         else if (d.StartsWith("{\"error\":\""))
                         {
-                            d = "{ \"data\": [], " + d;
+                            d = "{ \"data\": [] " + d;
                         }
                         else
                         {
@@ -80,7 +80,13 @@ namespace MovieSalesAPI.Shared
                             }
                             else
                             {
-                                d = "{ \"data\": " + d;
+                                if (d == "")
+                                {
+                                    d = "{ \"data\": [] " + d;
+                                } else
+                                {
+                                    d = "{ \"data\": " + d;
+                                }                            
                             }
                         }
 

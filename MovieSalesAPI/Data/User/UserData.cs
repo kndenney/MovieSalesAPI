@@ -76,10 +76,60 @@ namespace MovieSalesAPI.Data.User
                 };*/
             }
         }
+
+        /// <summary>
+        /// Retrieve a username
+        /// </summary>
+        /// <param name="username"></param>
+        /// <returns>Return the username</returns>
+        public dynamic RetrieveData
+        (
+            string username
+        )
+        {
+            try
+            {
+                using (SqlCommand cmd = new SqlCommand(connectionString))
+                {
+                    using (SqlConnection connection = new SqlConnection(connectionString))
+                    {
+                        DynamicParameters parameters = new DynamicParameters();
+
+                        parameters.Add("@username", dbType: DbType.AnsiString, value: username, direction: ParameterDirection.Input);
+                     
+                        var results = connection.Query<EndUsersname>("RetrieveData", parameters, commandType: CommandType.StoredProcedure);
+
+                        return results;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Guid internalCode = Guid.NewGuid();
+                return new ErrorJson {
+                    Error = ex.Message,
+                    Internalcode = internalCode.ToString()
+                };
+
+                //This needs saved to the database
+                /* new ExceptionJson
+                {
+                    Exception = ex.Message,
+                    Stacktrace = ex.StackTrace,
+                    InnerException = (ex.InnerException != null) ? ex.InnerException.ToString() : "",
+                    Internalcode = internalCode.ToString()
+                };*/
+            }
+        }
     }
 
     public interface IUserData
     {
        dynamic CreateUserAccount(IUser user);
+
+       dynamic RetrieveData
+        (
+            string username
+        );
     }
 }
