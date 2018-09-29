@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
 using MovieSalesAPI.Shared;
@@ -14,7 +15,7 @@ namespace MovieSalesAPI.Data
 
     public class MovieData : IMovieData
     {
-        private IMemoryCache _memoryCache;
+        private IDistributedCache _memoryCache;
         private string CacheName;
 
         //Maybe the list of movies updates only once a night via some feed into the database
@@ -23,10 +24,10 @@ namespace MovieSalesAPI.Data
         private TimeSpan untilMidnight = DateTime.Today.AddDays(1) - DateTime.Now;
         private string connectionString = "";
         private IOptions<AppConfig> _config;
-        MemoryCacheEntryOptions cacheExpirationOptions = new MemoryCacheEntryOptions();
+        DistributedCacheEntryOptions cacheExpirationOptions = new DistributedCacheEntryOptions();
 
         public MovieData(
-          IMemoryCache memoryCache,
+          IDistributedCache memoryCache,
           IOptions<AppConfig> config
         )
         {
@@ -34,7 +35,6 @@ namespace MovieSalesAPI.Data
             _config = config;
 
             cacheExpirationOptions.AbsoluteExpiration = DateTime.Now.AddMinutes(untilMidnight.TotalMinutes);
-            cacheExpirationOptions.Priority = CacheItemPriority.Normal;
         }
 
         //Example of Http REST Web API:
@@ -48,7 +48,7 @@ namespace MovieSalesAPI.Data
         /// </summary>
         /// <param name="username"></param>
         /// <returns>Return a list of all movies for the user.</returns>
-        public IEnumerable<IMovie> GetUsersMovies
+        public async Task<IEnumerable<IMovie>> GetUsersMovies
         (
             string username
         )
@@ -58,9 +58,10 @@ namespace MovieSalesAPI.Data
                 CacheName = "Movies" + username;
 
                 //If the cache exists return it
-                if (_memoryCache.TryGetValue(CacheName, out IEnumerable<IMovie> movies))
+                
+                if (_memoryCache.GetObject(CacheName) != null)
                 {
-                    return movies;
+                    return (IEnumerable<IMovie>)await _memoryCache.GetObject(CacheName);
                 }
 
                 //Retrieve the movies from the database based on the username
@@ -71,10 +72,10 @@ namespace MovieSalesAPI.Data
 
                     parameters.Add("@username", dbType: DbType.AnsiString, value: username, direction: ParameterDirection.Input);
 
-                    var results = connection.Query<Movie>("RetrieveUsersMovies", parameters, commandType: CommandType.StoredProcedure);
+                    var results = await connection.QueryAsync<Movie>("RetrieveUsersMovies", parameters, commandType: CommandType.StoredProcedure);
 
                     //The cache was empty therefore set a new cache object
-                    _memoryCache.Set(CacheName, results, cacheExpirationOptions);
+                    await _memoryCache.SetObject(CacheName, results, cacheExpirationOptions);
 
                     return results;
                 }
@@ -90,7 +91,7 @@ namespace MovieSalesAPI.Data
         /// </summary>
         /// <param name="username"></param>
         /// <returns></returns>
-        public IEnumerable<IMovie> GetAllMoviesIncludingUsers
+        public async Task<IEnumerable<IMovie>> GetAllMoviesIncludingUsers
         (
             string username
         )
@@ -99,9 +100,9 @@ namespace MovieSalesAPI.Data
             {
                 CacheName = "AllMovies" + username;
 
-                if (_memoryCache.TryGetValue(CacheName, out IEnumerable<IMovie> movies))
+                if (_memoryCache.GetObject(CacheName) != null)
                 {
-                    return movies;
+                    return (IEnumerable<IMovie>)await _memoryCache.GetObject(CacheName);
                 }
 
                 //Retrieve the movies from the database based on the username
@@ -115,7 +116,7 @@ namespace MovieSalesAPI.Data
                     var results = connection.Query<Movie>("RetrieveAllMoviesIncludingUsers", parameters, commandType: CommandType.StoredProcedure);
 
                     //The cache was empty therefore set a new cache object
-                    _memoryCache.Set(CacheName, results, cacheExpirationOptions);
+                    await _memoryCache.SetObject(CacheName, results, cacheExpirationOptions);
 
                     return results;
                 }
@@ -133,7 +134,7 @@ namespace MovieSalesAPI.Data
         /// <param name="movieid"></param>
         /// <param name="username"></param>
         /// <returns>Return a movie</returns>
-        public IEnumerable<IMovie> GetSpecificMovieDetailsById
+        public async Task<IEnumerable<IMovie>> GetSpecificMovieDetailsById
         (
             int movieid,
             string username
@@ -144,9 +145,9 @@ namespace MovieSalesAPI.Data
                 CacheName = "Movies" + username;
 
                 //If the cache exists return it
-                if (_memoryCache.TryGetValue(CacheName, out IList<IMovie> movies))
+                if (_memoryCache.GetObject(CacheName) != null)
                 {
-                    return movies;
+                    return (IEnumerable<IMovie>)_memoryCache.GetObject(CacheName);
                 }
 
                 //Retrieve the movies from the database based on the username
@@ -157,12 +158,12 @@ namespace MovieSalesAPI.Data
 
                     parameters.Add("@user", dbType: DbType.AnsiString, value: username, direction: ParameterDirection.Input);
 
-                    var results = connection.Query<Movie>("sprocName", parameters, commandType: CommandType.StoredProcedure);
+                    var results = await connection.QueryAsync<Movie>("sprocName", parameters, commandType: CommandType.StoredProcedure);
 
                     //The cache was empty therefore set a new cache object
-                    _memoryCache.Set(CacheName, results, cacheExpirationOptions);
+                    await _memoryCache.SetObject(CacheName, results, cacheExpirationOptions);
 
-                    return results.ToList();
+                    return results;
                 }
             }
             catch (Exception ex)
@@ -177,7 +178,7 @@ namespace MovieSalesAPI.Data
         /// <param name="moviename"></param>
         /// <param name="username"></param>
         /// <returns>Return a movie</returns>
-        public IEnumerable<IMovie> GetSpecificMovieDetailsByName
+        public async Task<IEnumerable<IMovie>> GetSpecificMovieDetailsByName
         (
             string moviename,
             string username
@@ -188,9 +189,9 @@ namespace MovieSalesAPI.Data
                 CacheName = "Movies" + username;
 
                 //If the cache exists return it
-                if (_memoryCache.TryGetValue(CacheName, out IEnumerable<IMovie> movies))
+                if (_memoryCache.GetObject(CacheName) != null)
                 {
-                    return movies;
+                    return (IEnumerable<IMovie>)await _memoryCache.GetObject(CacheName);
                 }
 
                 //Retrieve the movies from the database based on the username
@@ -205,9 +206,9 @@ namespace MovieSalesAPI.Data
                     var results = connection.Query<Movie>("sprocName", parameters, commandType: CommandType.StoredProcedure);
 
                     //The cache was empty therefore set a new cache object
-                    _memoryCache.Set(CacheName, results, cacheExpirationOptions);
+                    await _memoryCache.SetObject(CacheName, results.ToByteArray(), cacheExpirationOptions);
 
-                    return results.ToList();
+                    return results;
                 }
             }
             catch (Exception ex)
@@ -236,9 +237,9 @@ namespace MovieSalesAPI.Data
                 CacheName = "SaveMovieToDatabase" + movie.moviename + movie.imageurl;
 
                 //If the cache exists return it
-                if (_memoryCache.TryGetValue(CacheName, out IEnumerable<IMovie> movies))
+                if (_memoryCache.GetObject(CacheName) != null)
                 {
-                    return movies;
+                    return null; // return (IEnumerable<IMovie>)await _memoryCache.GetObject(CacheName);
                 }
 
                 //Retrieve the movies from the database based on the username
@@ -261,7 +262,7 @@ namespace MovieSalesAPI.Data
                     var results = connection.Query<Movie>("InsertMovie", parameters, commandType: CommandType.StoredProcedure);
 
                     //The cache was empty therefore set a new cache object
-                    _memoryCache.Set(CacheName, results, cacheExpirationOptions);
+                    _memoryCache.Set(CacheName, results.ToByteArray(), cacheExpirationOptions);
 
                     return results.ToList();
                 }
@@ -309,23 +310,23 @@ namespace MovieSalesAPI.Data
 
     public interface IMovieData
     {
-        IEnumerable<IMovie> GetUsersMovies
+        Task<IEnumerable<IMovie>> GetUsersMovies
         (
             string username
         );
 
-        IEnumerable<IMovie> GetAllMoviesIncludingUsers
+        Task<IEnumerable<IMovie>> GetAllMoviesIncludingUsers
         (
             string username
         );
 
-        IEnumerable<IMovie> GetSpecificMovieDetailsById
+        Task<IEnumerable<IMovie>> GetSpecificMovieDetailsById
         (
             int movieid,
             string username
         );
 
-        IEnumerable<IMovie> GetSpecificMovieDetailsByName
+        Task<IEnumerable<IMovie>> GetSpecificMovieDetailsByName
         (
             string moviename,
             string username

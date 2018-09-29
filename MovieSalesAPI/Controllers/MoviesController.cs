@@ -63,7 +63,7 @@ namespace MovieSalesAPI.Controllers
         [Authorize(Policy = "APIMovieAccess")]
         [HttpGet]
         [Route("users")]
-        public IEnumerable<IMovie> GetUsersMovies
+        public async Task<IEnumerable<IMovie>> GetUsersMovies
         (
             // [FromHeader] string authorization
         )
@@ -84,7 +84,7 @@ namespace MovieSalesAPI.Controllers
 
             if (User.Identity.IsAuthenticated)
             {
-                return _movieData.GetUsersMovies(User.Identity.Name);
+                return await _movieData.GetUsersMovies(User.Identity.Name);
             }
             else
             {
@@ -120,11 +120,11 @@ namespace MovieSalesAPI.Controllers
         [Authorize(Policy = "APIMovieAccess")]
         [HttpGet]
         [Route("{movieid}")]
-        public IEnumerable<IMovie> GetSpecificUsersMovieDetailsById([FromRoute] int movieid)
+        public async Task<IEnumerable<IMovie>> GetSpecificUsersMovieDetailsById([FromRoute] int movieid)
         {
             if (User.Identity.IsAuthenticated)
             {
-                return _movieData.GetSpecificMovieDetailsById(movieid, User.Identity.Name);
+                return await _movieData.GetSpecificMovieDetailsById(movieid, User.Identity.Name);
             }
             else
             {
@@ -141,11 +141,11 @@ namespace MovieSalesAPI.Controllers
         [Authorize(Policy = "APIMovieAccess")]
         [HttpGet]
         [Route("{moviename}")]
-        public IEnumerable<IMovie> GetSpecificUserMovieDetailsByName([FromRoute] string moviename)
+        public async Task<IEnumerable<IMovie>> GetSpecificUserMovieDetailsByName([FromRoute] string moviename)
         {
             if (User.Identity.IsAuthenticated)
             {
-                return _movieData.GetSpecificMovieDetailsByName(moviename, User.Identity.Name);
+                return await _movieData.GetSpecificMovieDetailsByName(moviename, User.Identity.Name);
             }
             else
             {
@@ -235,7 +235,7 @@ namespace MovieSalesAPI.Controllers
         [Authorize(Policy = "APIMovieAccess")]
         [HttpPatch]
         [Route("{id}")]
-        public IEnumerable<IMovie> UpdatePartialMovieInDatabaseById([FromRoute]int movieid, [FromBody]JsonPatchDocument<IMovie> moviePatch)
+        public async Task<IEnumerable<IMovie>> UpdatePartialMovieInDatabaseById([FromRoute]int movieid, [FromBody]JsonPatchDocument<IMovie> moviePatch)
         {
             //The idea is that you pull: somemoviefromdatabase
             //From the database
@@ -244,7 +244,7 @@ namespace MovieSalesAPI.Controllers
             //then reutrn the newly changed somemoviefromdatabase
             //object tback to the user
 
-            IEnumerable<IMovie> someMovie = _movieData.GetSpecificMovieDetailsById(movieid, User.Identity.Name);
+            IEnumerable<IMovie> someMovie = await _movieData.GetSpecificMovieDetailsById(movieid, User.Identity.Name);
             moviePatch.ApplyTo(someMovie.First());
 
             _movieData.SaveMovieToDatabase(someMovie.First());

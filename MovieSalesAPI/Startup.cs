@@ -248,6 +248,10 @@ namespace MovieSalesAPI
 
             app.UseCors("CorsPolicy");
 
+            //Add pipeline for compression
+            app.UseResponseCompression();
+            app.UseStaticFiles();
+
             app.UseResponseCodeMiddleware();
 
             if (env.IsDevelopment())
@@ -272,9 +276,6 @@ namespace MovieSalesAPI
             });
 
             app.UseAuthentication();
-
-            //Add pipeline for compression
-            app.UseResponseCompression();
 
             app.UseMvc();
         }
