@@ -18,10 +18,10 @@ namespace MovieSalesAPI.Shared
             {
                 return null;
             }
-            BinaryFormatter binaryFormatter = new BinaryFormatter();
+
             using (MemoryStream memoryStream = new MemoryStream())
             {
-                binaryFormatter.Serialize(memoryStream, obj);
+                new BinaryFormatter().Serialize(memoryStream, obj);
                 return memoryStream.ToArray();
             }
         }
@@ -32,10 +32,10 @@ namespace MovieSalesAPI.Shared
             {
                 return default(T);
             }
-            BinaryFormatter binaryFormatter = new BinaryFormatter();
+
             using (MemoryStream memoryStream = new MemoryStream(byteArray))
             {
-                return binaryFormatter.Deserialize(memoryStream) as T;
+                return new BinaryFormatter().Deserialize(memoryStream) as T;
             }
         }
 
