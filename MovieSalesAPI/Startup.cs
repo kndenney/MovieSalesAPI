@@ -23,6 +23,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using MovieSalesAPI.Data;
 using MovieSalesAPILogic;
 using MovieSalesAPI.Data.User;
+using Microsoft.AspNetCore.ResponseCompression;
 
 namespace MovieSalesAPI
 {
@@ -204,6 +205,28 @@ namespace MovieSalesAPI
             // *If* you need access to generic IConfiguration this is **required**
             services.AddSingleton<IConfiguration>(Configuration);
 
+            //Gzip Compression
+            //https://www.softfluent.com/blog/dev/Enabling-gzip-compression-with-ASP-NET-Core
+            services.Configure<GzipCompressionProviderOptions>(options => options.Level = System.IO.Compression.CompressionLevel.Optimal);
+            services.AddResponseCompression(options =>
+            {
+                options.MimeTypes = new[]
+                {
+                    // Default
+                    "text/plain",
+                    "text/css",
+                    "application/javascript",
+                    "text/html",
+                    "application/xml",
+                    "text/xml",
+                    "application/json",
+                    "text/json",
+                    // Custom
+                    "image/svg+xml"
+                };
+                options.EnableForHttps = true;
+            });
+
             //Add dependency injection for Data classes, models etc.
             services.AddTransient<IMovieData, MovieData>();
             services.AddTransient<IUserData, UserData>();
@@ -249,7 +272,10 @@ namespace MovieSalesAPI
             });
 
             app.UseAuthentication();
-   
+
+            //Add pipeline for compression
+            app.UseResponseCompression();
+
             app.UseMvc();
         }
     }

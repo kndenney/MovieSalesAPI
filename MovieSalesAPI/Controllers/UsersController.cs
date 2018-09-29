@@ -48,7 +48,7 @@ namespace MovieSalesAPI.Controllers
         /// Create a JWT token for the user
         /// </summary>
         /// <param name="request">Token Request posted in the form of Username and Password</param>
-        [Route("token")]
+        [Route("token")] //Attributes in .net Core: https://www.dotnetcurry.com/aspnet/1390/aspnet-core-web-api-attributes
         [AllowAnonymous]
         [HttpPost]
         public IEnumerable<ITokenResponse> CreateToken([FromBody] TokenRequest request)
