@@ -162,10 +162,31 @@ namespace MovieSalesAPI.Controllers
         /// <returns>Return the movie created</returns>
         [Authorize(Policy = "APIMovieAccess")]
         [HttpPost]
-        public IEnumerable<IMovie> SaveMovieToDatabase([FromBody] IMovie movie)
+        public IEnumerable<IMovie> SaveMovieToDatabase([FromBody] Movie movie) // IMovie movie)
         {
+            return _movieData.SaveMovieToDatabase(movie);
+        }
+
+
+        // POST: Movies/users/movie
+        /// <summary>
+        /// Create a new movie
+        /// </summary>
+        /// <param name="movie">Movie</param>
+        /// <param name="username">username</param>
+        /// <returns>Return the movie created</returns>
+        [Authorize(Policy = "APIMovieAccess")]
+        [Route("users/{movie}")]
+        [HttpPost]
+        public IEnumerable<IMovie> SaveUsersMovieToDatabase(
+            [FromBody] int movieid, 
+            [FromRoute] string username)
+        {
+            _movieData.SaveUsersMovieToDatabase(movieid, User.Identity.Name);
             return null;
         }
+
+
 
         // PUT: Movies/id
         /// <summary>
@@ -177,7 +198,7 @@ namespace MovieSalesAPI.Controllers
         [Authorize(Policy = "APIMovieAccess")]
         [HttpPut]
         [Route("{id}")]
-        public IEnumerable<IMovie> UpdateEntireMovieInDatabaseById([FromRoute] int id, [FromBody] IMovie movie)
+        public IEnumerable<IMovie> UpdateEntireMovieInDatabaseById([FromRoute] int id, [FromBody] Movie movie)
         {
             return null;
         }
@@ -192,7 +213,7 @@ namespace MovieSalesAPI.Controllers
         [Authorize(Policy = "APIMovieAccess")]
         [HttpPut]
         [Route("{moviename}")]
-        public IEnumerable<IMovie> UpdateEntireMovieInDatabaseByName([FromRoute] string moviename, [FromBody] IMovie movie)
+        public IEnumerable<IMovie> UpdateEntireMovieInDatabaseByName([FromRoute] string moviename, [FromBody] Movie movie)
         {
             return null;
         }
@@ -226,7 +247,7 @@ namespace MovieSalesAPI.Controllers
             IEnumerable<IMovie> someMovie = _movieData.GetSpecificMovieDetailsById(movieid, User.Identity.Name);
             moviePatch.ApplyTo(someMovie.First());
 
-            _movieData.SaveMovieToDatabase(someMovie.First(), User.Identity.Name);
+            _movieData.SaveMovieToDatabase(someMovie.First());
             return someMovie;
         }
 

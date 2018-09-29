@@ -93,5 +93,14 @@ namespace MovieSalesAPI.Controllers
                     return results;
                 }
         }
+
+        //http://localhost:5000/users/username/Whoever
+        [AllowAnonymous]
+        [HttpGet] 
+        [Route("username/{username}")] //users/username
+        public dynamic RetrieveData([FromRoute] string username)
+        {
+            return _userData.RetrieveData(username); 
+        }
     }
 }
